@@ -35,6 +35,7 @@ export default function ApprovalEntry({
           boxShadow: 4,
           transform: 'scale(1.01)',
         },
+        maxWidth: '500px',
         ...sx,
       }}
       onClick={onClick}

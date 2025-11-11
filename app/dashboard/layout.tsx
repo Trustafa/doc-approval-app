@@ -6,19 +6,14 @@ import {
   Send as SendIcon,
 } from '@mui/icons-material';
 import { Box, Drawer, useMediaQuery, useTheme } from '@mui/material';
-import { useState } from 'react';
-import BottomNav from '../components/bottom-nav';
-import SideNav from '../components/side-nav';
+import BottomNav from '../components/nav-bottom';
+import SideNav from '../components/nav-side';
 
 const drawerWidth = 240;
 
 export default function Layout({ children }: { children: React.ReactNode }) {
-  const [mobileOpen, setMobileOpen] = useState(false);
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
-  const toggleDrawer = () => {
-    setMobileOpen(!mobileOpen);
-  };
 
   const drawer = (
     <SideNav

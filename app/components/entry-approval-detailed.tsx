@@ -62,7 +62,7 @@ export default function DetailedView({ data, onClickBack }: DetailedViewProps) {
         <Tabs
           value={tabVal}
           onChange={handleChange}
-          aria-label="basic tabs example"
+          aria-label="Detailed View Tabs"
         >
           <Tab label="Details" {...a11yProps(0)} />
           <Tab label="Timeline" {...a11yProps(1)} />

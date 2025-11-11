@@ -6,70 +6,31 @@ import {
   Menu as MenuIcon,
   Send as SendIcon,
 } from '@mui/icons-material';
-import {
-  AppBar,
-  Box,
-  Drawer,
-  IconButton,
-  List,
-  ListItem,
-  ListItemButton,
-  ListItemIcon,
-  ListItemText,
-  Toolbar,
-} from '@mui/material';
-import Link from 'next/link';
-import { usePathname } from 'next/navigation';
+import { AppBar, Box, Drawer, IconButton, Toolbar } from '@mui/material';
 import { useState } from 'react';
+import SideNav from '../components/sidenav';
 
 const drawerWidth = 240;
 
 export default function Layout({ children }: { children: React.ReactNode }) {
   const [mobileOpen, setMobileOpen] = useState(false);
-  const pathname = usePathname();
-
   const toggleDrawer = () => {
     setMobileOpen(!mobileOpen);
   };
 
   const drawer = (
-    <div>
-      <List>
-        {[
-          { text: 'Home', icon: <HomeIcon />, ref: '/dashboard' },
-          {
-            text: 'Approvals',
-            icon: <DescriptionIcon />,
-            ref: '/dashboard/approvals',
-          },
+    <SideNav
+      items={[
+        { text: 'Home', icon: <HomeIcon />, ref: '/dashboard' },
+        {
+          text: 'Approvals',
+          icon: <DescriptionIcon />,
+          ref: '/dashboard/approvals',
+        },
 
-          { text: 'Requests', icon: <SendIcon />, ref: '/dashboard/requests' },
-        ].map((item) => {
-          const active = pathname === item.ref;
-          return (
-            <ListItem key={item.text}>
-              <Link
-                href={item.ref}
-                style={{
-                  textDecoration: 'none',
-                  color: '#000',
-                  width: '100%',
-                  borderRadius: '20%',
-                }}
-              >
-                <ListItemButton
-                  selected={active}
-                  onClick={() => setMobileOpen(false)}
-                >
-                  <ListItemIcon>{item.icon}</ListItemIcon>
-                  <ListItemText primary={item.text} />
-                </ListItemButton>
-              </Link>
-            </ListItem>
-          );
-        })}
-      </List>
-    </div>
+        { text: 'Requests', icon: <SendIcon />, ref: '/dashboard/requests' },
+      ]}
+    />
   );
 
   return (
@@ -131,7 +92,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
           flexGrow: 1,
           p: 3,
           width: { md: `calc(100% - ${drawerWidth}px)` },
-          mt: 8,
+          mt: 5,
         }}
       >
         {children}

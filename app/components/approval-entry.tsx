@@ -6,23 +6,26 @@ import {
 import { Card, CardContent, IconButton, Typography } from '@mui/material';
 import { Box, SxProps, Theme } from '@mui/system';
 
-type ApprovalEntryProps = {
+type ApprovalEntryData = {
   id: number;
   documentName: string;
   date: string;
   amount: number;
+};
+
+type ApprovalEntryProps = {
+  data: ApprovalEntryData;
+  onClick: () => void;
   sx?: SxProps<Theme>;
 };
 export default function ApprovalEntry({
-  id,
-  documentName,
-  date,
-  amount,
+  data,
+  onClick,
   sx,
 }: ApprovalEntryProps) {
   return (
     <Card
-      key={id}
+      key={data.id}
       sx={{
         borderRadius: 2,
         boxShadow: 2,
@@ -34,6 +37,7 @@ export default function ApprovalEntry({
         },
         ...sx,
       }}
+      onClick={onClick}
     >
       <CardContent>
         <Box
@@ -42,11 +46,11 @@ export default function ApprovalEntry({
           alignItems="center"
           flexWrap="wrap"
         >
-          <Typography variant="h6">{documentName}</Typography>
+          <Typography variant="h6">{data.documentName}</Typography>
         </Box>
 
         <Typography variant="caption" color="text.secondary">
-          {date}
+          {data.date}
         </Typography>
 
         <Box
@@ -55,15 +59,29 @@ export default function ApprovalEntry({
           justifyContent="space-between"
           alignItems="center"
         >
-          <Typography variant="h6">{amount.toLocaleString()}</Typography>
+          <Typography variant="h6">{data.amount.toLocaleString()}</Typography>
           <Box display="flex" gap={1}>
-            <IconButton aria-label="preview">
+            <IconButton
+              aria-label="preview"
+              onClick={(e) => e.stopPropagation()}
+              onMouseDown={(e) => e.stopPropagation()}
+            >
               <FindInPageIcon />
             </IconButton>
-            <IconButton aria-label="approve" color="success">
+            <IconButton
+              aria-label="approve"
+              color="success"
+              onClick={(e) => e.stopPropagation()}
+              onMouseDown={(e) => e.stopPropagation()}
+            >
               <CheckIcon />
             </IconButton>
-            <IconButton aria-label="reject" color="error">
+            <IconButton
+              aria-label="reject"
+              color="error"
+              onClick={(e) => e.stopPropagation()}
+              onMouseDown={(e) => e.stopPropagation()}
+            >
               <ClearIcon />
             </IconButton>
           </Box>

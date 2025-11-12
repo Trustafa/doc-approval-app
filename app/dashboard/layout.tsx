@@ -6,8 +6,8 @@ import {
   Send as SendIcon,
 } from '@mui/icons-material';
 import { Box, Drawer, useMediaQuery, useTheme } from '@mui/material';
-import BottomNav from '../components/nav-bottom';
-import SideNav from '../components/nav-side';
+import BottomNav from '../_components/nav-bottom';
+import SideNav from '../_components/nav-side';
 
 const drawerWidth = 240;
 

@@ -1,7 +1,7 @@
 'use client';
 
-import DetailedView from '@/app/components/approval-detailed/entry-approval-detailed';
-import ApprovalEntry from '@/app/components/entry-approval';
+import DetailedView from '@/app/_components/approval-detailed/entry-approval-detailed';
+import ApprovalEntry from '@/app/_components/entry-approval';
 import { Typography } from '@mui/material';
 import { Box } from '@mui/system';
 import { useState } from 'react';

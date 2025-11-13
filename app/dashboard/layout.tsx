@@ -13,7 +13,7 @@ const drawerWidth = 240;
 
 export default function Layout({ children }: { children: React.ReactNode }) {
   const theme = useTheme();
-  const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
+  const isMobile = useMediaQuery(theme.breakpoints.down('md'));
 
   const drawer = (
     <SideNav

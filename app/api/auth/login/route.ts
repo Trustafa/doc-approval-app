@@ -1,0 +1,60 @@
+import z from 'zod';
+import bcrypt from 'bcrypt';
+import { PrismaClient } from '@/generated/prisma/client';
+import { cookies as cookies } from 'next/headers';
+
+const inputSchema = z.object({
+  email: z.string(),
+  password: z.string(),
+  longLife: z.boolean().optional(),
+});
+
+export async function POST(request: Request) {
+  const body = await request.json();
+  const parsedBody = inputSchema.safeParse(body);
+
+  if (!parsedBody.success) {
+    return Response.json({ error: 'Invalid input' }, { status: 400 });
+  }
+
+  const input = parsedBody.data;
+
+  const prisma = new PrismaClient();
+  const user = await prisma.user.findUnique({
+    where: { email: input.email },
+  });
+
+  const compare =
+    user && (await bcrypt.compare(input.password, user.hashedPassword));
+
+  if (!user || !compare) {
+    return Response.json(
+      { error: 'Invalid username or password' },
+      { status: 401 }
+    );
+  }
+
+  const expiresAt = new Date();
+
+  if (input.longLife) {
+    expiresAt.setMonth(expiresAt.getMonth() + 1);
+  } else {
+    expiresAt.setHours(expiresAt.getHours() + 1);
+  }
+
+  const session = await prisma.userSession.create({
+    data: {
+      user: { connect: user },
+      expiresAt,
+      userAgent: request.headers.get('User-Agent'),
+      ipAddress: request.headers.get('X-Forwarded-For'),
+    },
+  });
+
+  const cookieStore = await cookies();
+
+  cookieStore.set('session-id', session.id, {
+    httpOnly: true,
+    expires: expiresAt,
+  });
+}

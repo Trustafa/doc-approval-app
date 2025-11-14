@@ -2,6 +2,7 @@ import { User, UserSession } from '@/generated/prisma/client';
 import { cookies } from 'next/headers';
 import { findSessionById, isSessionExpired } from './session.service';
 import { findUserBySessionId } from './user.service';
+import bcrypt from 'bcrypt';
 
 export async function findLoggedInUser(): Promise<User | null> {
   const session = await findLoggedInSession();
@@ -10,6 +11,8 @@ export async function findLoggedInUser(): Promise<User | null> {
   }
 
   const user = await findUserBySessionId(session.id);
+
+  if (user?.disabled) return null;
 
   return user;
 }
@@ -27,4 +30,16 @@ export async function findLoggedInSession(): Promise<UserSession | null> {
   }
 
   return session;
+}
+
+export async function hashPassword(password: string): Promise<string> {
+  const salt = await bcrypt.genSalt(10);
+  return bcrypt.hash(password, salt);
+}
+
+export async function comparePassword(
+  hashedPassword: string,
+  password: string
+): Promise<boolean> {
+  return bcrypt.compare(password, hashedPassword);
 }

@@ -1,7 +1,7 @@
 import z from 'zod';
-import bcrypt from 'bcrypt';
 import { PrismaClient } from '@/generated/prisma/client';
 import { cookies as cookies } from 'next/headers';
+import { comparePassword } from '../../_services/auth.service';
 
 const inputSchema = z.object({
   email: z.string(),
@@ -25,12 +25,19 @@ export async function POST(request: Request) {
   });
 
   const compare =
-    user && (await bcrypt.compare(input.password, user.hashedPassword));
+    user && (await comparePassword(input.password, user.hashedPassword));
 
   if (!user || !compare) {
     return Response.json(
       { error: 'Invalid username or password' },
       { status: 401 }
+    );
+  }
+
+  if (user?.disabled) {
+    return Response.json(
+      { error: 'User account is disabled' },
+      { status: 403 }
     );
   }
 

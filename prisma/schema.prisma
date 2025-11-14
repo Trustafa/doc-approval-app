@@ -21,8 +21,9 @@ model User {
   deletedAt DateTime? @db.Timestamptz()
 
   name           String
-  email          String @unique
+  email          String  @unique
   hashedPassword String
+  disabled       Boolean @default(true)
 
   approvals   Approval[]
   requests    Request[]

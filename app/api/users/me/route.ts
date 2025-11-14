@@ -3,9 +3,11 @@ import {
   updateUser,
   updateUserPassword,
 } from '../../_services/user.service';
-import { findLoggedInUser } from '../../_services/auth.service';
+import {
+  comparePassword,
+  findLoggedInUser,
+} from '../../_services/auth.service';
 import z from 'zod';
-import bcrypt from 'bcrypt';
 
 export async function GET(): Promise<Response> {
   const user = await findLoggedInUser();
@@ -40,7 +42,7 @@ export async function POST(req: Request): Promise<Response> {
   await updateUser(user.id, userDetails);
 
   if (oldPassword && newPassword) {
-    const compare = await bcrypt.compare(oldPassword, user.hashedPassword);
+    const compare = await comparePassword(oldPassword, user.hashedPassword);
     if (compare) await updateUserPassword(user.id, newPassword);
   }
 

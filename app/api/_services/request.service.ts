@@ -1,0 +1,171 @@
+import { ApprovalDecision, Prisma, Request } from '@/generated/prisma/client';
+import { prisma } from '../prisma';
+
+type RequestWithRequester = Prisma.RequestGetPayload<{
+  include: { requester: true };
+}>;
+
+type RequestWithApprovalFile = Prisma.RequestGetPayload<{
+  include: { approvalFile: true };
+}>;
+
+type RequestWithSupportingFiles = Prisma.RequestGetPayload<{
+  include: { supportingFiles: true };
+}>;
+
+type RequestWithFiles = RequestWithApprovalFile & RequestWithSupportingFiles;
+
+type RequestWithApprovals = Prisma.RequestGetPayload<{
+  include: { approvals: true };
+}>;
+
+export async function createRequest(input: {
+  title: string;
+  description?: string;
+  payee: string;
+  amount: number;
+  currency: string;
+  internalRef?: string;
+  externalRef?: string;
+  approvalFileDate: Date;
+  approvalFileId: number;
+  supportingFileIds: number[];
+  requesterId: number;
+}): Promise<RequestWithRequester & RequestWithFiles & RequestWithApprovals> {
+  return prisma.request.create({
+    data: {
+      title: input.title,
+      description: input.description,
+      payee: input.payee,
+      amount: input.amount,
+      currency: input.currency,
+      internalRef: input.internalRef,
+      externalRef: input.externalRef,
+      requesterId: input.requesterId,
+      approvalFileId: input.approvalFileId,
+      supportingFiles: {
+        connect: input.supportingFileIds.map((id) => ({ id })),
+      },
+      approvalFileDate: input.approvalFileDate,
+    },
+    include: {
+      supportingFiles: true,
+      approvalFile: true,
+      requester: true,
+      approvals: true,
+    },
+  });
+}
+
+export async function findRequestsBySender(
+  senderId: number,
+  opts?: Partial<{ skip: number; take: number; status: ApprovalDecision }>
+): Promise<[(RequestWithApprovals & RequestWithApprovalFile)[], number]> {
+  const where: Prisma.RequestWhereInput = { requesterId: senderId };
+
+  switch (opts?.status) {
+    case ApprovalDecision.PENDING:
+    case ApprovalDecision.REJECTED:
+      where.approvals = { some: { decision: opts.status } };
+      break;
+    case ApprovalDecision.APPROVED:
+      where.approvals = { every: { decision: opts.status } };
+  }
+
+  const requests = await prisma.request.findMany({
+    where,
+    skip: opts?.skip,
+    take: opts?.take,
+    include: {
+      approvalFile: true,
+      approvals: true,
+    },
+  });
+  const totalCount = await prisma.request.count({ where });
+
+  return [requests, totalCount];
+}
+
+export async function findRequestsByReceiver(
+  receiverId: number,
+  opts?: Partial<{ skip: number; take: number; status: ApprovalDecision }>
+): Promise<[(RequestWithApprovalFile & RequestWithRequester)[], number]> {
+  const where: Prisma.RequestWhereInput = {
+    approvals: { some: { OR: [{ approverId: receiverId }] } },
+  };
+
+  switch (opts?.status) {
+    case ApprovalDecision.PENDING:
+    case ApprovalDecision.REJECTED:
+      where.approvals = { some: { decision: opts.status } };
+      break;
+    case ApprovalDecision.APPROVED:
+      where.approvals = { every: { decision: opts.status } };
+  }
+
+  const requests = await prisma.request.findMany({
+    where,
+    skip: opts?.skip,
+    take: opts?.take,
+    include: {
+      requester: true,
+      approvalFile: true,
+    },
+  });
+  const totalCount = await prisma.request.count({ where });
+  return [requests, totalCount];
+}
+
+type RequestSummaryResponse = {
+  id: number;
+  createdAt: Date;
+  approvalFileDate: Date;
+  approvalFileId: number;
+  payee: string;
+  amount: number;
+  currency: string;
+  createdByName: string;
+  status: ApprovalDecision;
+};
+export function toRequestSummaryResponse(
+  request: RequestWithRequester & RequestWithApprovalFile & RequestWithApprovals
+): RequestSummaryResponse {
+  let status: ApprovalDecision = ApprovalDecision.PENDING;
+  for (const approval of request.approvals) {
+    if (
+      approval.decision === ApprovalDecision.REJECTED ||
+      approval.decision === ApprovalDecision.APPROVED
+    ) {
+      status = approval.decision;
+      break;
+    }
+  }
+
+  return {
+    id: request.id,
+    createdAt: request.createdAt,
+    approvalFileDate: request.approvalFileDate,
+    approvalFileId: request.approvalFile.id,
+    payee: request.payee,
+    amount: request.amount.toNumber(),
+    currency: request.currency,
+    createdByName: request.requester.name,
+    status,
+  };
+}
+
+export async function findRequestById(
+  id: number
+): Promise<
+  (RequestWithRequester & RequestWithFiles & RequestWithApprovals) | null
+> {
+  return prisma.request.findUnique({
+    where: { id },
+    include: {
+      requester: true,
+      supportingFiles: true,
+      approvalFile: true,
+      approvals: true,
+    },
+  });
+}

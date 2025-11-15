@@ -58,8 +58,8 @@ model Approval {
   requestId Int
   request   Request @relation("RequestApprovals", fields: [requestId], references: [id])
 
-  decision        DECISION_STATUS @default(PENDING)
-  decisionAt      DateTime?       @db.Timestamptz()
+  decision        ApprovalDecision @default(PENDING)
+  decisionAt      DateTime?        @db.Timestamptz()
   rejectionReason String?
 }
 
@@ -121,7 +121,7 @@ model File {
   RequestFile RequestFile[]
 }
 
-enum DECISION_STATUS {
+enum ApprovalDecision {
   APPROVED
   REJECTED
   PENDING

@@ -28,6 +28,7 @@ model User {
   approvals   Approval[]
   requests    Request[]
   UserSession UserSession[]
+  File        File[]
 }
 
 model UserSession {
@@ -52,11 +53,14 @@ model Approval {
   deletedAt DateTime? @db.Timestamptz()
 
   approverId Int
-  requestId  Int
-  decision   DECISION_STATUS @default(PENDING)
+  approver   User @relation(fields: [approverId], references: [id])
 
-  request  Request @relation("RequestApprovals", fields: [requestId], references: [id])
-  approver User    @relation(fields: [approverId], references: [id])
+  requestId Int
+  request   Request @relation("RequestApprovals", fields: [requestId], references: [id])
+
+  decision        DECISION_STATUS @default(PENDING)
+  decisionAt      DateTime?       @db.Timestamptz()
+  rejectionReason String?
 }
 
 model Request {
@@ -65,14 +69,39 @@ model Request {
   updatedAt DateTime  @updatedAt @db.Timestamptz()
   deletedAt DateTime? @db.Timestamptz()
 
-  requesterId Int
-  payee       String
-  amount      Decimal  @db.Decimal(10, 2)
-  date        DateTime
-  files       File[]
+  payee            String
+  amount           Decimal   @db.Decimal(10, 2)
+  currency         String
+  approvalFileDate DateTime  @db.Timestamptz()
+  title            String
+  description      String?
+  processedAt      DateTime? @db.Timestamptz()
+  externalRef      String?
+  internalRef      String?
 
-  approvals Approval[] @relation("RequestApprovals")
-  requester User       @relation(fields: [requesterId], references: [id])
+  requesterId Int
+  requester   User @relation(fields: [requesterId], references: [id])
+
+  approvalFileId Int         @unique
+  approvalFile   RequestFile @relation("ApprovalFile", fields: [approvalFileId], references: [id])
+
+  supportingFiles RequestFile[] @relation("SupportingFile")
+  approvals       Approval[]    @relation("RequestApprovals")
+}
+
+model RequestFile {
+  id        Int       @id @default(autoincrement())
+  createdAt DateTime  @default(now()) @db.Timestamptz()
+  updatedAt DateTime  @updatedAt @db.Timestamptz()
+  deletedAt DateTime? @db.Timestamptz()
+
+  requestId Int
+  request   Request @relation("SupportingFile", fields: [requestId], references: [id])
+
+  fileId Int
+  file   File @relation(fields: [fileId], references: [id])
+
+  approvalOfRequest Request? @relation("ApprovalFile")
 }
 
 model File {
@@ -81,11 +110,15 @@ model File {
   updatedAt DateTime  @updatedAt @db.Timestamptz()
   deletedAt DateTime? @db.Timestamptz()
 
-  url       String
-  name      String
-  requestId Int
+  createdById Int
+  createdBy   User @relation(fields: [createdById], references: [id])
 
-  request Request @relation(fields: [requestId], references: [id])
+  key         String  @unique
+  filename    String
+  mimeType    String?
+  sizeInBytes Int
+
+  RequestFile RequestFile[]
 }
 
 enum DECISION_STATUS {

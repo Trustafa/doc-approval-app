@@ -1,4 +1,9 @@
-import { ApprovalDecision, Prisma, Request } from '@/generated/prisma/client';
+import {
+  ApprovalDecision,
+  Prisma,
+  Request,
+  User,
+} from '@/generated/prisma/client';
 import { prisma } from '../prisma';
 
 type RequestWithRequester = Prisma.RequestGetPayload<{
@@ -168,4 +173,15 @@ export async function findRequestById(
       approvals: true,
     },
   });
+}
+
+export function isRequestSender(user: User, request: Request): boolean {
+  return user.id === request.requesterId;
+}
+
+export function isRequestApprover(
+  user: User,
+  request: RequestWithApprovals
+): boolean {
+  return request.approvals.some((a) => a.approverId === user.id);
 }

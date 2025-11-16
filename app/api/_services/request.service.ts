@@ -35,6 +35,7 @@ export async function createRequest(input: {
   approvalFileDate: Date;
   approvalFileId: number;
   supportingFileIds: number[];
+  approverIds: number[];
   requesterId: number;
 }): Promise<RequestWithRequester & RequestWithFiles & RequestWithApprovals> {
   return prisma.request.create({
@@ -52,6 +53,11 @@ export async function createRequest(input: {
         connect: input.supportingFileIds.map((id) => ({ id })),
       },
       approvalFileDate: input.approvalFileDate,
+      approvals: {
+        createMany: {
+          data: input.approverIds.map((approverId) => ({ approverId })),
+        },
+      },
     },
     include: {
       supportingFiles: true,

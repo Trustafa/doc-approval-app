@@ -15,7 +15,7 @@ datasource db {
 }
 
 model User {
-  id        Int       @id @default(autoincrement())
+  id        String    @id @default(cuid())
   createdAt DateTime  @default(now()) @db.Timestamptz()
   updatedAt DateTime  @updatedAt @db.Timestamptz()
   deletedAt DateTime? @db.Timestamptz()
@@ -37,25 +37,25 @@ model UserSession {
   updatedAt DateTime  @updatedAt @db.Timestamptz()
   deletedAt DateTime? @db.Timestamptz()
 
-  userId    Int
   active    Boolean   @default(true)
   expiresAt DateTime? @db.Timestamptz()
   ipAddress String?
   userAgent String?
 
-  user User @relation(fields: [userId], references: [id])
+  userId String
+  user   User   @relation(fields: [userId], references: [id])
 }
 
 model Approval {
-  id        Int       @id @default(autoincrement())
+  id        String    @id @default(cuid())
   createdAt DateTime  @default(now()) @db.Timestamptz()
   updatedAt DateTime  @updatedAt @db.Timestamptz()
   deletedAt DateTime? @db.Timestamptz()
 
-  approverId Int
-  approver   User @relation(fields: [approverId], references: [id])
+  approverId String
+  approver   User   @relation(fields: [approverId], references: [id])
 
-  requestId Int
+  requestId String
   request   Request @relation("RequestApprovals", fields: [requestId], references: [id])
 
   decision        ApprovalDecision @default(PENDING)
@@ -64,7 +64,7 @@ model Approval {
 }
 
 model Request {
-  id        Int       @id @default(autoincrement())
+  id        String    @id @default(cuid())
   createdAt DateTime  @default(now()) @db.Timestamptz()
   updatedAt DateTime  @updatedAt @db.Timestamptz()
   deletedAt DateTime? @db.Timestamptz()
@@ -79,46 +79,34 @@ model Request {
   externalRef      String?
   internalRef      String?
 
-  requesterId Int
-  requester   User @relation(fields: [requesterId], references: [id])
+  requesterId String
+  requester   User   @relation(fields: [requesterId], references: [id])
 
-  approvalFileId Int         @unique
-  approvalFile   RequestFile @relation("ApprovalFile", fields: [approvalFileId], references: [id])
+  approvalFileId String? @unique
+  approvalFile   File?   @relation("ApprovalFile", fields: [approvalFileId], references: [id])
 
-  supportingFiles RequestFile[] @relation("SupportingFile")
-  approvals       Approval[]    @relation("RequestApprovals")
-}
-
-model RequestFile {
-  id        Int       @id @default(autoincrement())
-  createdAt DateTime  @default(now()) @db.Timestamptz()
-  updatedAt DateTime  @updatedAt @db.Timestamptz()
-  deletedAt DateTime? @db.Timestamptz()
-
-  requestId Int
-  request   Request @relation("SupportingFile", fields: [requestId], references: [id])
-
-  fileId Int
-  file   File @relation(fields: [fileId], references: [id])
-
-  approvalOfRequest Request? @relation("ApprovalFile")
+  supportingFiles File[]     @relation("SupportingFile")
+  approvals       Approval[] @relation("RequestApprovals")
 }
 
 model File {
-  id        Int       @id @default(autoincrement())
+  id        String    @id @default(cuid())
   createdAt DateTime  @default(now()) @db.Timestamptz()
   updatedAt DateTime  @updatedAt @db.Timestamptz()
   deletedAt DateTime? @db.Timestamptz()
 
-  createdById Int
-  createdBy   User @relation(fields: [createdById], references: [id])
+  createdById String
+  createdBy   User   @relation(fields: [createdById], references: [id])
 
   key         String  @unique
   filename    String
   mimeType    String?
   sizeInBytes Int
 
-  RequestFile RequestFile[]
+  requestIdSupportingFile String?
+  requestAsSupportingFile Request? @relation("SupportingFile", fields: [requestIdSupportingFile], references: [id])
+
+  requestAsApprovalFile Request? @relation("ApprovalFile")
 }
 
 enum ApprovalDecision {

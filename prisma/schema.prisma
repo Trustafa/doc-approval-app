@@ -82,8 +82,8 @@ model Request {
   requesterId String
   requester   User   @relation(fields: [requesterId], references: [id])
 
-  approvalFileId String? @unique
-  approvalFile   File?   @relation("ApprovalFile", fields: [approvalFileId], references: [id])
+  approvalFileId String @unique
+  approvalFile   File   @relation("ApprovalFile", fields: [approvalFileId], references: [id])
 
   supportingFiles File[]     @relation("SupportingFile")
   approvals       Approval[] @relation("RequestApprovals")

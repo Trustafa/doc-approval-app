@@ -61,6 +61,8 @@ model Approval {
   decision        ApprovalDecision @default(PENDING)
   decisionAt      DateTime?        @db.Timestamptz()
   rejectionReason String?
+
+  @@unique([approverId, requestId])
 }
 
 model Request {

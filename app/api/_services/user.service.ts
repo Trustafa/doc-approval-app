@@ -2,7 +2,7 @@ import { User } from '@/generated/prisma/client';
 import { prisma } from '../prisma';
 import { hashPassword } from './auth.service';
 
-export async function findUserById(id: number): Promise<User | null> {
+export async function findUserById(id: string): Promise<User | null> {
   return prisma.user.findUnique({ where: { id } });
 }
 
@@ -24,14 +24,14 @@ export async function findUserBySessionId(id: string): Promise<User | null> {
 }
 
 export async function updateUser(
-  id: number,
+  id: string,
   input: Partial<User>
 ): Promise<User> {
   return prisma.user.update({ where: { id }, data: input });
 }
 
 export async function updateUserPassword(
-  id: number,
+  id: string,
   password: string
 ): Promise<User> {
   const hashedPassword = await hashPassword(password);
@@ -56,7 +56,7 @@ export async function createUser(input: {
 }
 
 export type UserResponse = {
-  id: number;
+  id: string;
   createdAt: string;
   updatedAt: string;
 

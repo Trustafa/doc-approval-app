@@ -1,5 +1,4 @@
 import z from 'zod';
-import { PrismaClient } from '@/generated/prisma/client';
 import { cookies as cookies } from 'next/headers';
 import { comparePassword } from '../../_services/auth.service';
 import { findUserByEmail } from '../../_services/user.service';

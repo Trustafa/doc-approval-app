@@ -12,9 +12,9 @@ const createRequestSchema = z.object({
   currency: z.string(),
   internalRef: z.string().optional(),
   externalRef: z.string().optional(),
-  approverIds: z.array(z.number()),
-  approvalFileId: z.number(),
-  supportingFileIds: z.array(z.number()).optional(),
+  approverIds: z.string().array(),
+  approvalFileId: z.string(),
+  supportingFileIds: z.string().array().optional(),
   approvalFileDate: z.coerce.date(),
 });
 
@@ -28,6 +28,7 @@ export async function POST(req: NextRequest) {
   const parsedBody = createRequestSchema.safeParse(body);
 
   if (!parsedBody.success) {
+    console.log(parsedBody.error);
     return Response.json({ error: 'Invalid input' }, { status: 400 });
   }
 

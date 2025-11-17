@@ -1,5 +1,5 @@
 import { findLoggedInUser } from '@/app/api/_services/auth.service';
-import { findFileByRequestFileId } from '@/app/api/_services/file.service';
+import { findFileById } from '@/app/api/_services/file.service';
 import {
   findRequestById,
   isRequestApprover,
@@ -10,16 +10,16 @@ import { join } from 'path';
 
 export async function GET(
   _: Request,
-  { params }: { params: Promise<{ requestId: string; requestFileId: string }> }
+  { params }: { params: Promise<{ requestId: string; fileId: string }> }
 ): Promise<Response> {
   const user = await findLoggedInUser();
   if (!user) {
     return new Response(null, { status: 401 });
   }
 
-  const { requestId, requestFileId } = await params;
+  const { requestId, fileId } = await params;
 
-  const request = await findRequestById(Number(requestId));
+  const request = await findRequestById(requestId);
 
   if (!request) {
     return new Response(null, { status: 404 });
@@ -32,7 +32,7 @@ export async function GET(
     return new Response(null, { status: 403 });
   }
 
-  const file = await findFileByRequestFileId(Number(requestFileId));
+  const file = await findFileById(fileId);
 
   if (!file) {
     return new Response(null, { status: 404 });

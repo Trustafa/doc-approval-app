@@ -23,13 +23,6 @@ export async function findFileByKey(key: string): Promise<FileEntity | null> {
   return prisma.file.findUnique({ where: { key } });
 }
 
-export async function findFileByRequestFileId(
-  requestFileId: number
-): Promise<FileEntity | null> {
-  const requestFile = await prisma.requestFile.findUnique({
-    where: { id: requestFileId },
-    include: { file: true },
-  });
-
-  return requestFile?.file ?? null;
+export async function findFileById(id: string): Promise<FileEntity | null> {
+  return prisma.file.findUnique({ where: { id } });
 }

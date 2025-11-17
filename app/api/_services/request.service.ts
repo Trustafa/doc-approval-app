@@ -33,10 +33,10 @@ export async function createRequest(input: {
   internalRef?: string;
   externalRef?: string;
   approvalFileDate: Date;
-  approvalFileId: number;
-  supportingFileIds: number[];
-  approverIds: number[];
-  requesterId: number;
+  approvalFileId: string;
+  supportingFileIds: string[];
+  approverIds: string[];
+  requesterId: string;
 }): Promise<RequestWithRequester & RequestWithFiles & RequestWithApprovals> {
   return prisma.request.create({
     data: {
@@ -47,8 +47,10 @@ export async function createRequest(input: {
       currency: input.currency,
       internalRef: input.internalRef,
       externalRef: input.externalRef,
-      requesterId: input.requesterId,
-      approvalFileId: input.approvalFileId,
+      requester: { connect: { id: input.requesterId } },
+      approvalFile: {
+        connect: { id: input.approvalFileId },
+      },
       supportingFiles: {
         connect: input.supportingFileIds.map((id) => ({ id })),
       },
@@ -69,7 +71,7 @@ export async function createRequest(input: {
 }
 
 export async function findRequestsBySender(
-  senderId: number,
+  senderId: string,
   opts?: Partial<{ skip: number; take: number; status: ApprovalDecision }>
 ): Promise<[(RequestWithApprovals & RequestWithApprovalFile)[], number]> {
   const where: Prisma.RequestWhereInput = { requesterId: senderId };
@@ -98,7 +100,7 @@ export async function findRequestsBySender(
 }
 
 export async function findRequestsByReceiver(
-  receiverId: number,
+  receiverId: string,
   opts?: Partial<{ skip: number; take: number; status: ApprovalDecision }>
 ): Promise<[(RequestWithApprovalFile & RequestWithRequester)[], number]> {
   const where: Prisma.RequestWhereInput = {
@@ -128,10 +130,10 @@ export async function findRequestsByReceiver(
 }
 
 type RequestSummaryResponse = {
-  id: number;
+  id: string;
   createdAt: Date;
   approvalFileDate: Date;
-  approvalFileId: number;
+  approvalFileId: string;
   payee: string;
   amount: number;
   currency: string;
@@ -166,7 +168,7 @@ export function toRequestSummaryResponse(
 }
 
 export async function findRequestById(
-  id: number
+  id: string
 ): Promise<
   (RequestWithRequester & RequestWithFiles & RequestWithApprovals) | null
 > {

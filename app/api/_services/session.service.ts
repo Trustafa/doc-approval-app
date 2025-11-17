@@ -8,7 +8,7 @@ export async function findSessionById(id: string): Promise<UserSession | null> {
 }
 
 export async function createSession(input: {
-  userId: number;
+  userId: string;
   expiresAt?: Date;
   userAgent?: string;
   ipAddress?: string;

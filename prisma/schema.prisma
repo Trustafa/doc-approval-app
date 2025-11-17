@@ -15,7 +15,7 @@ datasource db {
 }
 
 model User {
-  id        String    @id @default(cuid())
+  id        String    @id @default(uuid()) @db.Uuid()
   createdAt DateTime  @default(now()) @db.Timestamptz()
   updatedAt DateTime  @updatedAt @db.Timestamptz()
   deletedAt DateTime? @db.Timestamptz()
@@ -32,7 +32,7 @@ model User {
 }
 
 model UserSession {
-  id        String    @id @default(uuid())
+  id        String    @id @default(uuid()) @db.Uuid()
   createdAt DateTime  @default(now()) @db.Timestamptz()
   updatedAt DateTime  @updatedAt @db.Timestamptz()
   deletedAt DateTime? @db.Timestamptz()
@@ -42,20 +42,20 @@ model UserSession {
   ipAddress String?
   userAgent String?
 
-  userId String
+  userId String @db.Uuid()
   user   User   @relation(fields: [userId], references: [id])
 }
 
 model Approval {
-  id        String    @id @default(cuid())
+  id        String    @id @default(uuid()) @db.Uuid()
   createdAt DateTime  @default(now()) @db.Timestamptz()
   updatedAt DateTime  @updatedAt @db.Timestamptz()
   deletedAt DateTime? @db.Timestamptz()
 
-  approverId String
+  approverId String @db.Uuid()
   approver   User   @relation(fields: [approverId], references: [id])
 
-  requestId String
+  requestId String  @db.Uuid()
   request   Request @relation("RequestApprovals", fields: [requestId], references: [id])
 
   decision        ApprovalDecision @default(PENDING)
@@ -64,7 +64,7 @@ model Approval {
 }
 
 model Request {
-  id        String    @id @default(cuid())
+  id        String    @id @default(uuid()) @db.Uuid()
   createdAt DateTime  @default(now()) @db.Timestamptz()
   updatedAt DateTime  @updatedAt @db.Timestamptz()
   deletedAt DateTime? @db.Timestamptz()
@@ -79,10 +79,10 @@ model Request {
   externalRef      String?
   internalRef      String?
 
-  requesterId String
+  requesterId String @db.Uuid()
   requester   User   @relation(fields: [requesterId], references: [id])
 
-  approvalFileId String @unique
+  approvalFileId String @unique @db.Uuid()
   approvalFile   File   @relation("ApprovalFile", fields: [approvalFileId], references: [id])
 
   supportingFiles File[]     @relation("SupportingFile")
@@ -90,12 +90,12 @@ model Request {
 }
 
 model File {
-  id        String    @id @default(cuid())
+  id        String    @id @default(uuid()) @db.Uuid()
   createdAt DateTime  @default(now()) @db.Timestamptz()
   updatedAt DateTime  @updatedAt @db.Timestamptz()
   deletedAt DateTime? @db.Timestamptz()
 
-  createdById String
+  createdById String @db.Uuid()
   createdBy   User   @relation(fields: [createdById], references: [id])
 
   key         String  @unique
@@ -103,7 +103,7 @@ model File {
   mimeType    String?
   sizeInBytes Int
 
-  requestIdSupportingFile String?
+  requestIdSupportingFile String?  @db.Uuid()
   requestAsSupportingFile Request? @relation("SupportingFile", fields: [requestIdSupportingFile], references: [id])
 
   requestAsApprovalFile Request? @relation("ApprovalFile")

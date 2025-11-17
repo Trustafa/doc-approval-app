@@ -267,3 +267,41 @@ export function getRequestStatus(
 
   return ApprovalDecision.APPROVED;
 }
+
+export async function approveRequestByUser(
+  requestId: string,
+  user: User
+): Promise<boolean> {
+  const { count } = await prisma.approval.updateMany({
+    where: {
+      requestId,
+      approverId: user.id,
+      decision: ApprovalDecision.PENDING,
+    },
+    data: {
+      decision: ApprovalDecision.APPROVED,
+      decisionAt: new Date(),
+    },
+  });
+
+  return count === 1;
+}
+
+export async function rejectRequestByUser(
+  requestId: string,
+  user: User
+): Promise<boolean> {
+  const { count } = await prisma.approval.updateMany({
+    where: {
+      requestId,
+      approverId: user.id,
+      decision: ApprovalDecision.PENDING,
+    },
+    data: {
+      decision: ApprovalDecision.REJECTED,
+      decisionAt: new Date(),
+    },
+  });
+
+  return count === 1;
+}

@@ -1,6 +1,6 @@
 import { Box, Typography } from '@mui/material';
 import ApprovalEntry from '../_components/entry-approval';
-import { ApprovalEntryData } from '../dashboard/approvals/page';
+import { ApprovalEntryData } from '../dashboard/received-requests/page';
 
 type ApprovalsScreenProps = {
   onEntryClick: (data: ApprovalEntryData) => void;

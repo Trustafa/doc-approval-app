@@ -71,6 +71,7 @@ model Request {
   updatedAt DateTime  @updatedAt @db.Timestamptz()
   deletedAt DateTime? @db.Timestamptz()
 
+  idNumber         Int       @unique @default(autoincrement())
   payee            String
   amount           Decimal   @db.Decimal(10, 2)
   currency         String
@@ -80,6 +81,9 @@ model Request {
   processedAt      DateTime? @db.Timestamptz()
   externalRef      String?
   internalRef      String?
+
+  signedApprovalFileId String? @unique @db.Uuid()
+  signedApprovalFile   File?   @relation("SignedApprovalFile", fields: [signedApprovalFileId], references: [id])
 
   requesterId String @db.Uuid()
   requester   User   @relation(fields: [requesterId], references: [id])
@@ -108,7 +112,8 @@ model File {
   requestIdSupportingFile String?  @db.Uuid()
   requestAsSupportingFile Request? @relation("SupportingFile", fields: [requestIdSupportingFile], references: [id])
 
-  requestAsApprovalFile Request? @relation("ApprovalFile")
+  requestAsApprovalFile       Request? @relation("ApprovalFile")
+  requestAsSignedApprovalFile Request? @relation("SignedApprovalFile")
 }
 
 enum ApprovalDecision {

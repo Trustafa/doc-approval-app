@@ -1,5 +1,7 @@
-import { findLoggedInUser } from '../../_services/auth.service';
-import { uploadFile } from '../../_services/upload.service';
+import { writeFile } from 'fs/promises';
+import { findLoggedInUser } from '../_services/auth.service';
+import { uploadFile } from '../_services/sys-file.service';
+import { prisma } from '../prisma';
 
 export async function POST(req: Request): Promise<Response> {
   const user = await findLoggedInUser();
@@ -21,7 +23,16 @@ export async function POST(req: Request): Promise<Response> {
     );
   }
 
-  const dbFile = await uploadFile(file, user);
+  const key = await uploadFile(file, user);
+  const dbFile = await prisma.file.create({
+    data: {
+      key,
+      filename: file.name,
+      mimeType: file.type,
+      sizeInBytes: file.size,
+      createdBy: { connect: { id: user.id } },
+    },
+  });
 
   return Response.json(dbFile, { status: 201 });
 }

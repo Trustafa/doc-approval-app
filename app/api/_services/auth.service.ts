@@ -1,8 +1,7 @@
 import { User, UserSession } from '@/generated/prisma/client';
 import { cookies } from 'next/headers';
-import { findSessionById, isSessionExpired } from './session.service';
-import { findUserBySessionId } from './user.service';
 import bcrypt from 'bcrypt';
+import { prisma } from '../prisma';
 
 export async function findLoggedInUser(): Promise<User | null> {
   const session = await findLoggedInSession();
@@ -10,7 +9,9 @@ export async function findLoggedInUser(): Promise<User | null> {
     return null;
   }
 
-  const user = await findUserBySessionId(session.id);
+  const user = await prisma.user.findUnique({
+    where: { id: session.userId },
+  });
 
   if (user?.disabled) return null;
 
@@ -24,8 +25,14 @@ export async function findLoggedInSession(): Promise<UserSession | null> {
     return null;
   }
 
-  const session = await findSessionById(sessionId);
-  if (!session?.active || isSessionExpired(session)) {
+  const session = await prisma.userSession.findUnique({
+    where: {
+      id: sessionId,
+      active: true,
+      expiresAt: { gt: new Date() },
+    },
+  });
+  if (!session) {
     return null;
   }
 

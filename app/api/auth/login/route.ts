@@ -1,9 +1,7 @@
 import z from 'zod';
-import { PrismaClient } from '@/generated/prisma/client';
 import { cookies as cookies } from 'next/headers';
 import { comparePassword } from '../../_services/auth.service';
-import { findUserByEmail } from '../../_services/user.service';
-import { createSession } from '../../_services/session.service';
+import { prisma } from '../../prisma';
 
 const inputSchema = z.object({
   email: z.string(),
@@ -21,7 +19,7 @@ export async function POST(request: Request) {
 
   const input = parsedBody.data;
 
-  const user = await findUserByEmail(input.email);
+  const user = await prisma.user.findUnique({ where: { email: input.email } });
   const compare =
     user && (await comparePassword(input.password, user.hashedPassword));
 
@@ -47,11 +45,13 @@ export async function POST(request: Request) {
     expiresAt.setHours(expiresAt.getHours() + 1);
   }
 
-  const session = await createSession({
-    userId: user.id,
-    expiresAt,
-    userAgent: request.headers.get('user-agent') || 'unknown',
-    ipAddress: request.headers.get('x-forwarded-for') || 'unknown',
+  const session = await prisma.userSession.create({
+    data: {
+      user: { connect: { id: user.id } },
+      expiresAt,
+      userAgent: request.headers.get('user-agent') || 'unknown',
+      ipAddress: request.headers.get('x-forwarded-for') || 'unknown',
+    },
   });
 
   const cookieStore = await cookies();

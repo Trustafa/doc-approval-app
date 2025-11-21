@@ -1,5 +1,7 @@
 import z from 'zod';
-import { createUser, toUserResponse } from '../../_services/user.service';
+import { toUserResponse } from '../../_services/user.service';
+import { prisma } from '../../prisma';
+import { hashPassword } from '../../_services/auth.service';
 
 const createUserSchema = z.object({
   name: z.string().min(1),
@@ -17,7 +19,13 @@ export async function POST(req: Request): Promise<Response> {
 
   const input = parsedBody.data;
 
-  const user = await createUser(input);
+  const user = await prisma.user.create({
+    data: {
+      name: input.name,
+      email: input.email.toLowerCase(),
+      hashedPassword: await hashPassword(input.password),
+    },
+  });
 
   return Response.json(toUserResponse(user), { status: 201 });
 }

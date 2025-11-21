@@ -1,20 +1,20 @@
-import { readFile } from 'node:fs/promises';
+import { readFile } from 'fs/promises';
+import { join } from 'path';
 import { findLoggedInUser } from '../../_services/auth.service';
-import { findFileByKey } from '../../_services/file.service';
-import { join } from 'node:path';
+import { prisma } from '../../prisma';
 
 export async function GET(
-  _: Request,
-  { params }: { params: Promise<{ key: string }> }
+  _: unknown,
+  { params }: { params: Promise<{ fileId: string }> }
 ): Promise<Response> {
   const user = await findLoggedInUser();
   if (!user) {
     return new Response(null, { status: 401 });
   }
 
-  const { key } = await params;
+  const { fileId } = await params;
 
-  const file = await findFileByKey(key);
+  const file = await prisma.file.findUnique({ where: { id: fileId } });
   if (!file) {
     return new Response(null, { status: 404 });
   }

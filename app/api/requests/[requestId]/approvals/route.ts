@@ -1,3 +1,4 @@
+import { toApprovalResponse } from '@/app/api/_services/approval.service';
 import { findLoggedInUser } from '@/app/api/_services/auth.service';
 import { prisma } from '@/app/api/prisma';
 
@@ -19,12 +20,18 @@ export async function GET(
         { approvals: { some: { approverId: user.id } } },
       ],
     },
-    include: { approvals: true },
+    include: { approvals: { include: { approver: true } } },
   });
 
   if (!request) {
     return new Response(null, { status: 404 });
   }
 
-  return Response.json({ data: request.approvals }, { status: 200 });
+  return Response.json(
+    {
+      data: request.approvals.map(toApprovalResponse),
+      count: request.approvals.length,
+    },
+    { status: 200 }
+  );
 }

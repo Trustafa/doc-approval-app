@@ -1,4 +1,4 @@
-import { toUserResponse } from '../../_services/user.service';
+import { toMeUserResponse } from '../../_services/user.service';
 import {
   comparePassword,
   findLoggedInUser,
@@ -13,7 +13,7 @@ export async function GET(): Promise<Response> {
     return new Response(null, { status: 401 });
   }
 
-  return Response.json(toUserResponse(user));
+  return Response.json(toMeUserResponse(user));
 }
 
 const userUpdateSchema = z.object({
@@ -21,6 +21,7 @@ const userUpdateSchema = z.object({
   email: z.email().optional(),
   oldPassword: z.string().optional(),
   newPassword: z.string().optional(),
+  signatureFileId: z.string().optional(),
 });
 
 export async function POST(req: Request): Promise<Response> {
@@ -36,13 +37,20 @@ export async function POST(req: Request): Promise<Response> {
     return new Response(null, { status: 401 });
   }
 
-  const { oldPassword, newPassword, ...userDetails } = parsedBody.data;
+  const { data } = parsedBody;
 
   await prisma.user.update({
     where: { id: user.id },
-    data: userDetails,
+    data: {
+      name: data.name,
+      email: data.email,
+      signatureFile: data.signatureFileId
+        ? { connect: { id: data.signatureFileId } }
+        : undefined,
+    },
   });
 
+  const { oldPassword, newPassword } = data;
   if (oldPassword && newPassword) {
     const match = await comparePassword(oldPassword, user.hashedPassword);
 

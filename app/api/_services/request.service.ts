@@ -3,7 +3,6 @@ import {
   Prisma,
   Request,
   User,
-  File as FileEntity,
 } from '@/generated/prisma/client';
 import { toUserResponse } from './user.service';
 
@@ -12,9 +11,14 @@ type RequestWithRequester = Request &
     include: { requester: true };
   }>;
 
-type RequestWithApprovals = Request &
+export type RequestWithApprovals = Request &
   Prisma.RequestGetPayload<{
     include: { approvals: true };
+  }>;
+
+export type RequestWithApprovalsWithApprovers = Request &
+  Prisma.RequestGetPayload<{
+    include: { approvals: { include: { approver: true } } };
   }>;
 
 export type RequestResponse = {
@@ -82,4 +86,20 @@ export function getRequestStatus(
   if (pendingCount > 0) return ApprovalDecision.PENDING;
 
   return ApprovalDecision.APPROVED;
+}
+
+export function findFirstApproverWithSignature(
+  request: RequestWithApprovalsWithApprovers
+): (User & { signatureFileId: string }) | null {
+  const approval = request.approvals.find(
+    (approval) =>
+      approval.decision === ApprovalDecision.APPROVED &&
+      approval.approver.signatureFileId
+  );
+
+  if (!approval || !approval.approver.signatureFileId) {
+    return null;
+  }
+
+  return approval.approver as User & { signatureFileId: string };
 }

@@ -18,3 +18,14 @@ export function toUserResponse(user: User): UserResponse {
     name: user.name,
   };
 }
+
+export type MeUserResponse = UserResponse & {
+  signatureFileId: string | null;
+};
+
+export function toMeUserResponse(user: User): MeUserResponse {
+  return {
+    ...toUserResponse(user),
+    signatureFileId: user.signatureFileId,
+  };
+}

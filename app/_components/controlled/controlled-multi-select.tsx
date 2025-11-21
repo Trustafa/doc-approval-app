@@ -1,3 +1,5 @@
+'use client';
+
 import { ControlledFieldProps } from '@/utils/form-control-props.type';
 import { Autocomplete, Box, Typography } from '@mui/material';
 import { FieldValues, useController } from 'react-hook-form';

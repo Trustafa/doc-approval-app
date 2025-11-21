@@ -1,3 +1,5 @@
+'use client';
+
 import { ApprovalEntryData } from '@/app/dashboard/requests/received/page';
 import {
   Paper,

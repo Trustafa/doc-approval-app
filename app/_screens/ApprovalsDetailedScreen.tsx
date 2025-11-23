@@ -5,7 +5,7 @@ import { Box, IconButton, Tab, Tabs, Typography } from '@mui/material';
 import { useState } from 'react';
 import DetailsBottomBar from '../_components/approval-detailed/details-bottom-bar';
 import ApprovalDetailsTable from '../_components/approval-detailed/entry-approval-details-table';
-import { ApprovalEntryData } from '../dashboard/approvals/page';
+import { ApprovalEntryData } from '../dashboard/requests/received/page';
 
 type DetailedViewProps = {
   data: ApprovalEntryData;

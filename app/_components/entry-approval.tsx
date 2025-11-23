@@ -1,3 +1,5 @@
+'use client';
+
 import {
   Check as CheckIcon,
   Clear as ClearIcon,

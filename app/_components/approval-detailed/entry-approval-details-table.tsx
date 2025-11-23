@@ -1,3 +1,6 @@
+'use client';
+
+import { ApprovalEntryData } from '@/app/dashboard/requests/received/page';
 import {
   Paper,
   Table,
@@ -7,18 +10,8 @@ import {
   TableRow,
 } from '@mui/material';
 
-type ApprovalEntry = {
-  id: number;
-  documentName: string;
-  requester: string;
-  approvers: string[];
-  amount: number;
-  status: 'PENDING' | 'APPROVED' | 'REJECTED';
-  date: string;
-};
-
 type ApprovalTableProps = {
-  data: ApprovalEntry;
+  data: ApprovalEntryData;
   onApprove: (id: number) => void;
   onReject: (id: number) => void;
 };

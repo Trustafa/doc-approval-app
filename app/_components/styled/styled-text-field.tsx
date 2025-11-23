@@ -29,6 +29,7 @@ export default function StyledTextField(props: StyledTextFieldProps) {
       sx={{
         '& .MuiOutlinedInput-root': {
           borderRadius: 2,
+          fontFamily: 'ComingSoon',
           fontSize: 16,
           paddingLeft: 1.5,
           paddingRight: 1.5,

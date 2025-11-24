@@ -48,6 +48,7 @@ export type RequestResponse = {
   };
 
   status: ApprovalDecision | null;
+  idNumber: number;
 };
 
 export function toRequestResponse(
@@ -67,6 +68,7 @@ export function toRequestResponse(
     externalRef: request.externalRef,
     requester: toUserResponse(request.requester),
     status: getRequestStatus(request),
+    idNumber: request.idNumber,
   };
 }
 

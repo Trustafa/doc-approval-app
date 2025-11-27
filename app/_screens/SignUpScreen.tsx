@@ -8,6 +8,7 @@ import {
   CssBaseline,
   FormControl,
   FormLabel,
+  Link,
   Stack,
 } from '@mui/material';
 import { styled } from '@mui/material/styles';
@@ -15,7 +16,6 @@ import Typography from '@mui/material/Typography';
 import { useRouter } from 'next/navigation';
 import { useForm } from 'react-hook-form';
 import AppTheme from '../../shared-theme/AppTheme';
-import ColorModeSelect from '../../shared-theme/ColorModeSelect';
 import ControlledStyledTextField from '../_components/controlled/controlled-styled-text-field';
 import { signUp } from '../api/_services/auth.client';
 
@@ -92,16 +92,13 @@ export default function SignUpScreen(props: { disableCustomTheme?: boolean }) {
     <AppTheme {...props}>
       <CssBaseline enableColorScheme />
       <SignUpContainer direction="column" justifyContent="space-between">
-        <ColorModeSelect
-          sx={{ position: 'fixed', top: '1rem', right: '1rem' }}
-        />
         <Card variant="outlined">
           <Typography
             component="h1"
             variant="h4"
             sx={{ width: '100%', fontSize: 'clamp(2rem, 10vw, 2.15rem)' }}
           >
-            Sign in
+            Sign Up
           </Typography>
           <Box
             component="form"
@@ -161,8 +158,15 @@ export default function SignUpScreen(props: { disableCustomTheme?: boolean }) {
               />
             </FormControl>
             <Button type="submit" fullWidth variant="contained">
-              Sign in
+              Sign Up
             </Button>
+            <Link
+              href="/login"
+              variant="body2"
+              sx={{ alignSelf: 'center', cursor: 'pointer' }}
+            >
+              Already have an account? Log In
+            </Link>
           </Box>
         </Card>
       </SignUpContainer>

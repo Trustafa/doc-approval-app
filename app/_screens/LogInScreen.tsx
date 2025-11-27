@@ -19,7 +19,6 @@ import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import AppTheme from '../../shared-theme/AppTheme';
-import ColorModeSelect from '../../shared-theme/ColorModeSelect';
 import ControlledStyledTextField from '../_components/controlled/controlled-styled-text-field';
 import ForgotPassword from '../_components/forgot-password-popup';
 import { logIn } from '../api/_services/auth.client';
@@ -111,9 +110,6 @@ export default function LogInScreen(props: { disableCustomTheme?: boolean }) {
     <AppTheme {...props}>
       <CssBaseline enableColorScheme />
       <LogInContainer direction="column" justifyContent="space-between">
-        <ColorModeSelect
-          sx={{ position: 'fixed', top: '1rem', right: '1rem' }}
-        />
         <Card variant="outlined">
           <Typography
             component="h1"
@@ -184,6 +180,13 @@ export default function LogInScreen(props: { disableCustomTheme?: boolean }) {
               sx={{ alignSelf: 'center' }}
             >
               Forgot your password?
+            </Link>
+            <Link
+              href="/signup"
+              variant="body2"
+              sx={{ alignSelf: 'center', cursor: 'pointer' }}
+            >
+              Don’t have an account? Create one
             </Link>
           </Box>
         </Card>

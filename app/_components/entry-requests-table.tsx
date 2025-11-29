@@ -8,6 +8,7 @@ import {
   TableRow,
 } from '@mui/material';
 import { useRouter } from 'next/navigation';
+import { RequestType } from '../_types/request';
 import { RequestResponse } from '../api/_services/request.service';
 import ApproveButton from './buttons/approve-button';
 import PreviewButton from './buttons/preview-button';
@@ -16,7 +17,7 @@ import RejectButton from './buttons/reject-button';
 type RequestsTableProps = {
   data: RequestResponse[];
   baseRoute: string;
-  requestType: 'Received' | 'Sent';
+  requestType: RequestType;
 };
 
 export default function RequestsTable({
@@ -50,13 +51,11 @@ export default function RequestsTable({
 
           {requestType === 'Sent' ? (
             <>
-              {' '}
               <TableCell>Requester</TableCell>
               <TableCell />
             </>
           ) : (
             <>
-              {' '}
               <TableCell>Internal Ref</TableCell>
               <TableCell>External Ref</TableCell>
               <TableCell />
@@ -101,12 +100,10 @@ export default function RequestsTable({
             <TableCell>{req.currency}</TableCell>
             {requestType === 'Sent' ? (
               <>
-                {' '}
                 <TableCell>{req.requester?.name}</TableCell>
               </>
             ) : (
               <>
-                {' '}
                 <TableCell>Internal Ref</TableCell>
                 <TableCell>External Ref</TableCell>
               </>

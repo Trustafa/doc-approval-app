@@ -21,7 +21,7 @@ import { useForm } from 'react-hook-form';
 import AppTheme from '../../shared-theme/AppTheme';
 import ControlledStyledTextField from '../_components/controlled/controlled-styled-text-field';
 import ForgotPassword from '../_components/forgot-password-popup';
-import { logIn } from '../api/_services/auth.client';
+import { logIn } from '../api/_client/auth.client';
 
 type LogInProps = {
   email: string;

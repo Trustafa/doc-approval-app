@@ -1,5 +1,6 @@
 'use client';
 
+import { colors } from '@/utils/colors';
 import { TextField, TextFieldProps } from '@mui/material';
 import { useState } from 'react';
 
@@ -34,13 +35,13 @@ export default function StyledTextField(props: StyledTextFieldProps) {
           paddingLeft: 1.5,
           paddingRight: 1.5,
           '& fieldset': {
-            borderColor: isFocused ? '#555555' : '#888888',
+            borderColor: isFocused ? colors.focused : colors.blurred,
           },
           '&:hover fieldset': {
-            borderColor: '#555555',
+            borderColor: colors.focused,
           },
           '&.Mui-focused fieldset': {
-            borderColor: '#555555',
+            borderColor: colors.focused,
           },
         },
         ...props.sx,

@@ -16,16 +16,26 @@ import {
   useMediaQuery,
   useTheme,
 } from '@mui/material';
+import { usePathname } from 'next/navigation';
 import { useState } from 'react';
 import SideNav from '../_components/nav-side';
 
 const drawerWidth = 240;
+
+const titles: Record<string, string> = {
+  '/dashboard': 'Home',
+  '/dashboard/requests/received': 'Received Requests',
+  '/dashboard/requests/sent': 'Sent Requests',
+};
 
 export default function Layout({ children }: { children: React.ReactNode }) {
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('md'));
 
   const [mobileOpen, setMobileOpen] = useState(false);
+
+  const pathname = usePathname();
+  const pageTitle = titles[pathname] || 'Document Approval';
 
   const toggleMobileDrawer = () => {
     setMobileOpen((prev) => !prev);
@@ -39,36 +49,12 @@ export default function Layout({ children }: { children: React.ReactNode }) {
           text: 'Received Requests',
           icon: <DescriptionIcon />,
           ref: '/dashboard/requests/received',
-          children: [
-            {
-              text: 'All',
-              ref: '/dashboard/requests/received',
-              icon: <DescriptionIcon />,
-            },
-            {
-              text: 'Pending',
-              ref: '/dashboard/requests/received/pending',
-              icon: <DescriptionIcon />,
-            },
-          ],
         },
 
         {
           text: 'Sent Requests',
           icon: <SendIcon />,
           ref: '/dashboard/requests/sent',
-          children: [
-            {
-              text: 'All',
-              ref: '/dashboard/requests/sent',
-              icon: <DescriptionIcon />,
-            },
-            {
-              text: 'Pending',
-              ref: '/dashboard/requests/sent/pending',
-              icon: <DescriptionIcon />,
-            },
-          ],
         },
       ]}
     />
@@ -77,7 +63,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
   return (
     <Box sx={{ display: 'flex' }}>
       {isMobile && (
-        <AppBar position="fixed" color="transparent" elevation={0}>
+        <AppBar position="fixed" color="inherit" elevation={0}>
           <Toolbar>
             <IconButton
               color="inherit"
@@ -87,7 +73,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
             >
               <MenuIcon />
             </IconButton>
-            <Typography variant="h6">Document Approval</Typography>
+            <Typography variant="h6">{pageTitle}</Typography>
           </Toolbar>
         </AppBar>
       )}

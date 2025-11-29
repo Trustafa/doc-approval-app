@@ -1,68 +1,79 @@
 'use client';
 
 import RequestsScreen from '@/app/_screens/RequestsScreen';
-import { Add } from '@mui/icons-material';
-import { IconButton } from '@mui/material';
-import { useRouter } from 'next/navigation';
 
 export default function SentRequestsPage() {
-  const router = useRouter();
-  const approvals = [
+  const requests = [
     {
-      id: 1,
-      documentName: 'Invoice 1',
-      date: '10-11-2025',
-      amount: 10000,
-      requester: 'Bob',
-      approvers: ['Alice', 'George'],
-      status: 'PENDING' as const,
+      id: 1012,
+      requestDate: '2024-10-18',
+      payee: 'Acme Supplies Ltd.',
+      amount: 450.75,
+      currency: 'GBP',
+      requester: 'John Smith',
+      status: 'APPROVED',
     },
     {
-      id: 2,
-      documentName: 'Invoice 2',
-      date: '09-11-2025',
-      amount: 15000,
-      requester: 'Bob',
-      approvers: ['Alice', 'George'],
-      status: 'PENDING' as const,
+      id: 1013,
+      requestDate: '2024-10-20',
+      payee: 'Global Stationery Co.',
+      amount: 89.99,
+      currency: 'GBP',
+      requester: 'Sarah Johnson',
+      status: 'PENDING',
     },
     {
-      id: 3,
-      documentName: 'Invoice 3',
-      date: '07-11-2025',
-      amount: 104500,
-      requester: 'Bob',
-      approvers: ['Alice', 'George'],
-      status: 'PENDING' as const,
+      id: 1014,
+      requestDate: '2024-10-21',
+      payee: 'IT Hardware Express',
+      amount: 1299.5,
+      currency: 'USD',
+      requester: 'Michael Brown',
+      status: 'REJECTED',
+    },
+    {
+      id: 1015,
+      requestDate: '2024-10-22',
+      payee: 'EventHub Services',
+      amount: 750.0,
+      currency: 'EUR',
+      requester: 'Emily Davis',
+      status: 'APPROVED',
+    },
+    {
+      id: 1016,
+      requestDate: '2024-10-25',
+      payee: 'Office Cleaning Group',
+      amount: 320.0,
+      currency: 'GBP',
+      requester: 'Daniel Wilson',
+      status: 'PENDING',
+    },
+    {
+      id: 1017,
+      requestDate: '2024-10-26',
+      payee: 'Catering World',
+      amount: 567.25,
+      currency: 'GBP',
+      requester: 'Emma Thompson',
+      status: 'APPROVED',
+    },
+    {
+      id: 1018,
+      requestDate: '2024-10-27',
+      payee: 'TechFix Repairs',
+      amount: 210.0,
+      currency: 'USD',
+      requester: 'Lucas Gray',
+      status: 'REJECTED',
     },
   ];
 
-  const add_form_button = (
-    <IconButton
-      aria-label="add_request"
-      color="inherit"
-      onClick={() => router.push('/dashboard/requests/sent/new')}
-      sx={{
-        backgroundColor: '#1976d2',
-        color: 'white',
-        width: 48,
-        height: 48,
-        borderRadius: '50%',
-        boxShadow: 2,
-        '&:hover': {
-          backgroundColor: '#115293',
-        },
-      }}
-    >
-      <Add />
-    </IconButton>
-  );
   return (
     <RequestsScreen
-      data={approvals}
       baseRoute="/dashboard/requests/sent"
       title="Sent Requests"
-      headerAction={add_form_button}
+      requestType="Sent"
     />
   );
 }

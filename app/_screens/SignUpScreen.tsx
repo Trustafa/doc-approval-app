@@ -17,7 +17,7 @@ import { useRouter } from 'next/navigation';
 import { useForm } from 'react-hook-form';
 import AppTheme from '../../shared-theme/AppTheme';
 import ControlledStyledTextField from '../_components/controlled/controlled-styled-text-field';
-import { signUp } from '../api/_services/auth.client';
+import { signUp } from '../api/_client/auth.client';
 
 type SignUpProps = {
   name: string;

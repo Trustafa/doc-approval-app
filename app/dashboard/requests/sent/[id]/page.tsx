@@ -1,6 +1,6 @@
 'use client';
 
-import DetailedView from '@/app/_screens/ApprovalsDetailedScreen';
+import RequestDetailScreen from '@/app/_screens/RequestDetailedScreen';
 import { useRouter } from 'next/navigation';
 import { use } from 'react';
 
@@ -14,12 +14,13 @@ export default function SentRequestDetail({
 
   const data = {
     id: Number(id),
-    documentName: `Invoice ${id}`,
-    requester: 'Bob',
-    approvers: ['Alice', 'George'],
-    amount: 10000,
+    payee: `Invoice ${id}`,
+    requester: 'Alice',
+    approvers: ['Bob', 'Charlie'],
+    amount: 5000,
     status: 'PENDING' as const,
-    date: '10-11-2025',
+    requestDate: '2025-11-11',
+    currency: 'AED',
   };
-  return <DetailedView data={data} onClickBack={() => router.back()} />;
+  return <RequestDetailScreen data={data} onClickBack={() => router.back()} />;
 }

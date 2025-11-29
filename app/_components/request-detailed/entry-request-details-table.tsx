@@ -1,6 +1,5 @@
 'use client';
 
-import { ApprovalEntryData } from '@/app/dashboard/requests/received/page';
 import {
   Paper,
   Table,
@@ -14,6 +13,17 @@ type ApprovalTableProps = {
   data: ApprovalEntryData;
   onApprove: (id: number) => void;
   onReject: (id: number) => void;
+};
+
+type ApprovalEntryData = {
+  id: number;
+  requestDate: string;
+  payee: string;
+  amount: number;
+  currency: string;
+  requester: string;
+  status: string;
+  approvers: string[];
 };
 
 type ApprovalTableRowProps = {
@@ -39,7 +49,7 @@ export default function ApprovalDetailsTable({
     <TableContainer component={Paper}>
       <Table key={data.id} sx={{ mb: 2 }}>
         <TableBody>
-          <ApprovalTableRow header="Document Name" data={data.documentName} />
+          <ApprovalTableRow header="Document Name" data={data.payee} />
           <ApprovalTableRow header="Requester" data={data.requester} />
           <ApprovalTableRow
             header="Approvers"
@@ -49,7 +59,7 @@ export default function ApprovalDetailsTable({
           <ApprovalTableRow header="Status" data={data.status} />
           <ApprovalTableRow
             header="Date"
-            data={new Date(data.date).toLocaleDateString()}
+            data={new Date(data.requestDate).toLocaleDateString()}
           />
         </TableBody>
       </Table>

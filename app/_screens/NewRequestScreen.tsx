@@ -8,11 +8,15 @@ import { ControlledMultiSelect } from '../_components/controlled/controlled-mult
 import ControlledStyledTextField from '../_components/controlled/controlled-styled-text-field';
 
 type NewRequestInput = {
+  internalRef: string;
+  externalRef: string;
   payee: string;
   amount: number;
+  currency: string;
   description: string;
   approvers: string[];
-  file: FileList | null;
+  approvalDoc: FileList | null;
+  supportingDocs: FileList | null;
 };
 const allApprovers = ['Bob', 'Mustafa', 'Alice', 'Charlie', 'David'];
 export default function NewRequestScreen() {
@@ -20,11 +24,15 @@ export default function NewRequestScreen() {
 
   const { handleSubmit, control } = useForm<NewRequestInput>({
     defaultValues: {
+      internalRef: '',
+      externalRef: '',
       payee: '',
-      amount: 1,
+      amount: 0,
+      currency: '',
       approvers: [] as string[],
       description: '',
-      file: null,
+      approvalDoc: null,
+      supportingDocs: null,
     },
   });
 
@@ -41,7 +49,7 @@ export default function NewRequestScreen() {
         component="form"
         onSubmit={handleSubmit(onSubmit)}
         sx={{
-          maxWidth: 500,
+          maxWidth: 700,
           mx: 'auto',
           display: 'flex',
           flexDirection: 'column',
@@ -50,6 +58,25 @@ export default function NewRequestScreen() {
         <Typography variant="h4" sx={{ mb: 3, textAlign: 'center' }}>
           New Request
         </Typography>
+        <Box
+          sx={{
+            display: 'flex',
+            flexDirection: { xs: 'column', sm: 'row' },
+            justifyContent: 'space-between',
+            gap: 2,
+          }}
+        >
+          <ControlledStyledTextField<NewRequestInput>
+            name="internalRef"
+            control={control}
+            label="Internal Ref"
+          />
+          <ControlledStyledTextField<NewRequestInput>
+            name="externalRef"
+            control={control}
+            label="External Ref"
+          />
+        </Box>
         <ControlledStyledTextField<NewRequestInput>
           name="payee"
           control={control}
@@ -57,17 +84,34 @@ export default function NewRequestScreen() {
           rules={{ required: 'Payee is required' }}
           placeholder="Enter payee"
         />
-        <ControlledStyledTextField<NewRequestInput>
-          name="amount"
-          control={control}
-          type="number"
-          label="Amount*"
-          rules={{
-            required: 'Amount is required',
-            min: { value: 0.01, message: 'Amount must be > 0' },
+        <Box
+          sx={{
+            display: 'flex',
+            flexDirection: { xs: 'column', sm: 'row' },
+            justifyContent: 'space-between',
+            gap: 2,
           }}
-          placeholder="Enter amount"
-        />
+        >
+          <ControlledStyledTextField<NewRequestInput>
+            name="amount"
+            control={control}
+            type="number"
+            label="Amount*"
+            rules={{
+              required: 'Amount is required',
+              min: { value: 0.01, message: 'Amount must be greater than 0' },
+            }}
+            placeholder="Enter amount"
+          />
+
+          <ControlledStyledTextField<NewRequestInput>
+            name="currency"
+            control={control}
+            label="Currency*"
+            rules={{ required: 'Currency is required' }}
+            placeholder="Enter Currency"
+          />
+        </Box>
         <ControlledMultiSelect
           name="approvers"
           label="Approvers*"
@@ -83,12 +127,27 @@ export default function NewRequestScreen() {
           multiline
           rows={6}
         />
-        <ControlledFileUpload
-          name="file"
-          control={control}
-          label="File*"
-          rules={{ required: 'File is required' }}
-        />
+        <Box
+          sx={{
+            display: 'flex',
+            flexDirection: { xs: 'column', sm: 'row' },
+            justifyContent: 'space-between',
+            gap: 2,
+          }}
+        >
+          <ControlledFileUpload
+            name="approvalDoc"
+            control={control}
+            label="Approval Document*"
+            rules={{ required: 'File is required' }}
+          />
+          <ControlledFileUpload
+            name="supportingDocs"
+            control={control}
+            label="Supporting Documents"
+            multiple
+          />
+        </Box>
         <Button variant="contained" color="primary" type="submit">
           Submit
         </Button>

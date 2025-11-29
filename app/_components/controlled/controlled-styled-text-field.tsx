@@ -20,7 +20,7 @@ const ControlledStyledTextField = <T extends FieldValues>({
     fieldState: { error },
   } = useController({ name, control, rules });
   return (
-    <Box sx={{ display: 'flex', flexDirection: 'column', mb: 2 }}>
+    <Box sx={{ display: 'flex', flexDirection: 'column', mb: 2, flex: 1 }}>
       <Typography variant="caption" sx={{ mb: 0.5, color: 'text.secondary' }}>
         {label}
       </Typography>

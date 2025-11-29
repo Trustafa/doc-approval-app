@@ -5,8 +5,9 @@ import { IconButton, InputAdornment, OutlinedInput } from '@mui/material';
 import { useState } from 'react';
 type SearchBarProps = {
   onSearch: (value: string) => void;
+  placeholder?: string;
 };
-export default function SearchBar({ onSearch }: SearchBarProps) {
+export default function SearchBar({ onSearch, placeholder }: SearchBarProps) {
   const [value, setValue] = useState('');
 
   const handleSearch = () => {
@@ -15,7 +16,7 @@ export default function SearchBar({ onSearch }: SearchBarProps) {
 
   return (
     <OutlinedInput
-      placeholder="Search"
+      placeholder={placeholder ?? 'Search'}
       value={value}
       onChange={(e) => setValue(e.target.value)}
       onKeyDown={(e) => e.key === 'Enter' && handleSearch()}

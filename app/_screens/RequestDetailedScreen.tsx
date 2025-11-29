@@ -3,9 +3,8 @@
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import { Box, IconButton, Tab, Tabs, Typography } from '@mui/material';
 import { useState } from 'react';
-import DetailsBottomBar from '../_components/approval-detailed/details-bottom-bar';
-import ApprovalDetailsTable from '../_components/approval-detailed/entry-approval-details-table';
-import { ApprovalEntryData } from '../dashboard/requests/received/page';
+import DetailsBottomBar from '../_components/request-detailed/details-bottom-bar';
+import ApprovalDetailsTable from '../_components/request-detailed/entry-request-details-table';
 
 type DetailedViewProps = {
   data: ApprovalEntryData;
@@ -17,6 +16,17 @@ interface TabPanelProps {
   index: number;
   value: number;
 }
+
+type ApprovalEntryData = {
+  id: number;
+  requestDate: string;
+  payee: string;
+  amount: number;
+  currency: string;
+  requester: string;
+  status: string;
+  approvers: string[];
+};
 
 function CustomTabPanel(props: TabPanelProps) {
   const { children, value, index, ...other } = props;
@@ -40,7 +50,10 @@ function a11yProps(index: number) {
   };
 }
 
-export default function DetailedView({ data, onClickBack }: DetailedViewProps) {
+export default function RequestDetailScreen({
+  data,
+  onClickBack,
+}: DetailedViewProps) {
   const [tabVal, setTabVal] = useState(0);
 
   const handleChange = (event: React.SyntheticEvent, newValue: number) => {
@@ -55,7 +68,7 @@ export default function DetailedView({ data, onClickBack }: DetailedViewProps) {
       <IconButton onClick={onClickBack} sx={{ zIndex: 10 }}>
         <ArrowBackIcon />
       </IconButton>
-      <Typography variant="h2">{data.documentName}</Typography>
+      <Typography variant="h2">{data.payee}</Typography>
       <Typography variant="h5" sx={{ mb: 2 }}>
         {data.amount.toLocaleString()}
       </Typography>

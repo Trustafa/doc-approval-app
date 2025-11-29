@@ -33,7 +33,13 @@ export function ControlledMultiSelect<T extends FieldValues>({
         options={options}
         value={value}
         onChange={(_, newValue) => onChange(newValue)}
-        renderInput={(params) => <StyledTextField {...params} />}
+        renderInput={(params) => (
+          <StyledTextField
+            error={!!error}
+            helperText={error?.message}
+            {...params}
+          />
+        )}
       />
     </Box>
   );

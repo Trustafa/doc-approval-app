@@ -41,3 +41,5 @@ export async function getRequests(
     count: json.count,
   };
 }
+
+export async function submitRequest() {}

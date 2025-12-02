@@ -34,3 +34,15 @@ export async function signUp(
     return { success: true };
   }
 }
+
+export async function logOut(): Promise<AuthResult> {
+  const res = await fetch('/api/auth/logout', {
+    method: 'POST',
+  });
+
+  if (!res.ok) {
+    return { success: false, status: res.status };
+  } else {
+    return { success: true };
+  }
+}

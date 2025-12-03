@@ -1,14 +1,19 @@
+import { rejectRequest } from '@/app/api/_client/approval.client';
 import { Clear } from '@mui/icons-material';
 import { IconButton } from '@mui/material';
 
 type RejectButtonProps = {
   button?: React.ReactNode;
-  requestId: number;
+  requestId: string;
 };
 
 export default function RejectButton({ button, requestId }: RejectButtonProps) {
-  const onClick = (e: React.MouseEvent) => {
+  const onClick = async (e: React.MouseEvent) => {
     e.stopPropagation();
+
+    const res = await rejectRequest(requestId);
+
+    if (!res.success) alert('Failed to reject request');
   };
 
   if (button) {

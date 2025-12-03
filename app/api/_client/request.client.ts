@@ -42,6 +42,17 @@ export async function getRequests(
   };
 }
 
+export async function getRequestByID(requestId: string) {
+  const res = await fetch(`/api/requests/${requestId}`);
+  if (!res.ok) {
+    return { success: false, status: res.status };
+  }
+
+  const data = await res.json();
+
+  return { success: true, data };
+}
+
 export async function submitRequest(data: {
   title: string;
   description?: string;

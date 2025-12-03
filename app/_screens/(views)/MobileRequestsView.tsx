@@ -2,6 +2,7 @@
 
 import ApprovalEntry from '@/app/_components/entry-requests-card';
 import SearchBar from '@/app/_components/search-bar';
+import { RequestFilters } from '@/app/_types/request';
 import { RequestResponse } from '@/app/api/_services/request.service';
 import {
   Box,
@@ -17,11 +18,17 @@ import { useState } from 'react';
 type RequestsScreenProps = {
   data: RequestResponse[];
   baseRoute: string;
+  filters: RequestFilters;
+  setFilters: (f: RequestFilters) => void;
+  page: number;
+  setPage: (page: number) => void;
+  canApproveMap: Record<string, boolean>;
 };
 
 export default function MobileRequestsView({
   data,
   baseRoute,
+  canApproveMap,
 }: RequestsScreenProps) {
   const router = useRouter();
 
@@ -61,7 +68,7 @@ export default function MobileRequestsView({
           data={item}
           sx={{ mb: 2 }}
           onClick={() => router.push(`${baseRoute}/${item.id}`)}
-          viewOnly
+          viewOnly={canApproveMap[item.id]}
         />
       ))}
     </Box>

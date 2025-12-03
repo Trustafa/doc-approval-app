@@ -1,4 +1,3 @@
-import { ApprovalDecision } from '@/generated/prisma/enums';
 import { colors } from '@/utils/colors';
 import {
   Box,
@@ -19,18 +18,16 @@ type RequestsTableProps = {
   data: RequestResponse[];
   baseRoute: string;
   requestType: RequestType;
+  canApproveMap: Record<string, boolean>;
 };
 
 export default function RequestsTable({
   data,
   baseRoute,
   requestType,
+  canApproveMap,
 }: RequestsTableProps) {
   const router = useRouter();
-
-  const showApprovalButtons = (status: ApprovalDecision | null) => {
-    return requestType === 'Received' && status === 'PENDING';
-  };
 
   return (
     <Table
@@ -116,10 +113,10 @@ export default function RequestsTable({
             <TableCell>
               <Box display="flex" gap={1}>
                 <PreviewButton requestId={req.idNumber} />
-                {showApprovalButtons(req.status) && (
+                {(canApproveMap?.[req.id] ?? false) && (
                   <>
-                    <ApproveButton requestId={req.idNumber} />
-                    <RejectButton requestId={req.idNumber} />
+                    <ApproveButton requestId={req.id} />
+                    <RejectButton requestId={req.id} />
                   </>
                 )}
               </Box>

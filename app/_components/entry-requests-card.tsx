@@ -60,7 +60,7 @@ export default function ApprovalEntry({
           flexWrap="wrap"
         >
           <Typography variant="caption">
-            {`ID ${data.id} • `}
+            {`ID ${data.idNumber} • `}
             {data.payee}
           </Typography>
         </Box>

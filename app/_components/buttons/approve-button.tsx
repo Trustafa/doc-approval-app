@@ -1,17 +1,22 @@
+import { approveRequest } from '@/app/api/_client/approval.client';
 import { Check } from '@mui/icons-material';
 import { IconButton } from '@mui/material';
 
 type ApproveButtonProps = {
   button?: React.ReactNode;
-  requestId: number;
+  requestId: string;
 };
 
 export default function ApproveButton({
   button,
   requestId,
 }: ApproveButtonProps) {
-  const onClick = (e: React.MouseEvent) => {
+  const onClick = async (e: React.MouseEvent) => {
     e.stopPropagation();
+
+    const res = await approveRequest(requestId);
+
+    if (!res.success) alert('Failed to approve request');
   };
 
   if (button) {

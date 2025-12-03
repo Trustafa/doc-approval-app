@@ -17,6 +17,7 @@ type RequestsScreenProps = {
   setFilters: (f: RequestFilters) => void;
   page: number;
   setPage: (page: number) => void;
+  canApproveMap: Record<string, boolean>;
 };
 
 export default function DesktopRequestsView({
@@ -25,6 +26,7 @@ export default function DesktopRequestsView({
   baseRoute,
   requestType,
   setFilters,
+  canApproveMap,
 }: RequestsScreenProps) {
   const router = useRouter();
 
@@ -72,6 +74,7 @@ export default function DesktopRequestsView({
         data={data}
         baseRoute={baseRoute}
         requestType={requestType}
+        canApproveMap={canApproveMap}
       />
     </Box>
   );

@@ -3,21 +3,17 @@ import { IconButton } from '@mui/material';
 
 type ApproveButtonProps = {
   button?: React.ReactNode;
-  requestId: number;
+  onClick: () => void;
 };
 
-export default function ApproveButton({
-  button,
-  requestId,
-}: ApproveButtonProps) {
-  const onClick = (e: React.MouseEvent) => {
-    e.stopPropagation();
-  };
-
+export default function ApproveButton({ button, onClick }: ApproveButtonProps) {
   if (button) {
     return (
       <span
-        onClick={(e) => onClick(e)}
+        onClick={(e) => {
+          e.stopPropagation();
+          onClick();
+        }}
         onMouseDown={(e) => e.stopPropagation()}
       >
         {button}
@@ -29,7 +25,10 @@ export default function ApproveButton({
     <IconButton
       aria-label="approve"
       color="success"
-      onClick={(e) => onClick(e)}
+      onClick={(e) => {
+        e.stopPropagation();
+        onClick();
+      }}
       onMouseDown={(e) => e.stopPropagation()}
     >
       <Check />

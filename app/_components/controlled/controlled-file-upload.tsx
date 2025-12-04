@@ -1,16 +1,22 @@
 'use client';
 
+import { uploadFileClient } from '@/app/api/_client/file.client';
 import { colors } from '@/utils/colors';
 import { ControlledFieldProps } from '@/utils/form-control-props.type';
 import { Close } from '@mui/icons-material';
 import { Box, Button, IconButton, Typography } from '@mui/material';
-import { useRef } from 'react';
+import { useRef, useState } from 'react';
 import { FieldValues, useController } from 'react-hook-form';
 
 type ControlledFileUploadProps<T extends FieldValues> =
   ControlledFieldProps<T> & {
     multiple?: boolean;
   };
+
+export type UploadedFileSummary = {
+  id: string;
+  filename: string;
+};
 
 export default function ControlledFileUpload<T extends FieldValues>({
   name,
@@ -25,27 +31,46 @@ export default function ControlledFileUpload<T extends FieldValues>({
   } = useController({ name, control, rules });
 
   const fileInputRef = useRef<HTMLInputElement | null>(null);
-  const fileList = value as FileList;
+  const fileList = value as UploadedFileSummary[];
+  const [loading, setLoading] = useState(false);
 
   const handleOpenPicker = () => {
     fileInputRef.current?.click();
   };
 
-  const removeFile = (indexToRemove: number) => {
-    if (!fileList) return;
+  const uploadFiles = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const files = e.target.files;
+    if (!files || files.length === 0) return;
 
-    const dt = new DataTransfer();
-    Array.from(fileList)
-      .filter((_, i) => i !== indexToRemove)
-      .forEach((file) => dt.items.add(file));
+    setLoading(true);
 
-    onChange(dt.files);
+    const uploaded: UploadedFileSummary[] = [];
+
+    for (const file of Array.from(files)) {
+      const result = await uploadFileClient(file);
+
+      if (!result.success) {
+        alert(result.error);
+        continue;
+      }
+
+      uploaded.push({
+        id: result.data?.id ?? '',
+        filename: result.data?.filename ?? '',
+      });
+    }
+
+    setLoading(false);
+    onChange([...(value ?? []), ...uploaded]);
+
+    e.target.value = '';
   };
+  const removeFile = (indexToRemove: number) => {
+    const currentFiles = (value as UploadedFileSummary[]) ?? [];
 
-  const formatSize = (bytes: number) => {
-    if (bytes < 1024) return `${bytes} B`;
-    if (bytes < 1024 * 1024) return `${(bytes / 1024).toFixed(1)} KB`;
-    return `${(bytes / (1024 * 1024)).toFixed(1)} MB`;
+    const newFiles = currentFiles.filter((_, i) => i !== indexToRemove);
+
+    onChange(newFiles);
   };
 
   return (
@@ -59,7 +84,8 @@ export default function ControlledFileUpload<T extends FieldValues>({
         multiple={multiple}
         ref={fileInputRef}
         style={{ display: 'none' }}
-        onChange={(e) => onChange(e.target.files)}
+        accept="application/pdf"
+        onChange={(e) => uploadFiles(e)}
       />
 
       {/* Upload button */}
@@ -74,7 +100,11 @@ export default function ControlledFileUpload<T extends FieldValues>({
         disableElevation
         onClick={handleOpenPicker}
       >
-        {multiple ? 'Choose Files' : 'Choose File'}
+        {loading
+          ? 'Uploading File...'
+          : multiple
+            ? 'Choose Files'
+            : 'Choose File'}
       </Button>
 
       {fileList && fileList.length > 0 && (
@@ -89,9 +119,7 @@ export default function ControlledFileUpload<T extends FieldValues>({
                 mb: 0.5,
               }}
             >
-              <Typography variant="body2">
-                • {file.name} ({formatSize(file.size)})
-              </Typography>
+              <Typography variant="body2">• {file.filename}</Typography>
 
               <IconButton
                 size="small"

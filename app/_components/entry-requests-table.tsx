@@ -8,6 +8,10 @@ import {
   TableRow,
 } from '@mui/material';
 import { useRouter } from 'next/navigation';
+import {
+  handleApprove,
+  handleReject,
+} from '../_screens/(views)/DesktopRequestsView';
 import { RequestType } from '../_types/request';
 import { RequestResponse } from '../api/_services/request.service';
 import ApproveButton from './buttons/approve-button';
@@ -18,12 +22,14 @@ type RequestsTableProps = {
   data: RequestResponse[];
   baseRoute: string;
   requestType: RequestType;
+  canApproveMap: Record<string, boolean>;
 };
 
 export default function RequestsTable({
   data,
   baseRoute,
   requestType,
+  canApproveMap,
 }: RequestsTableProps) {
   const router = useRouter();
 
@@ -49,7 +55,7 @@ export default function RequestsTable({
           <TableCell>Amount</TableCell>
           <TableCell>Currency</TableCell>
 
-          {requestType === 'Sent' ? (
+          {requestType === 'Received' ? (
             <>
               <TableCell>Requester</TableCell>
               <TableCell />
@@ -93,30 +99,30 @@ export default function RequestsTable({
             }}
             onClick={() => router.push(`${baseRoute}/${req.id}`)}
           >
-            <TableCell>{req.id}</TableCell>
-            <TableCell>{req.createdAt.toDateString()}</TableCell>
+            <TableCell>{req.idNumber}</TableCell>
+            <TableCell>{req.createdAt.toLocaleDateString('en-GB')}</TableCell>
             <TableCell>{req.payee}</TableCell>
             <TableCell>{req.amount.toFixed(2)}</TableCell>
             <TableCell>{req.currency}</TableCell>
-            {requestType === 'Sent' ? (
+            {requestType === 'Received' ? (
               <>
                 <TableCell>{req.requester?.name}</TableCell>
               </>
             ) : (
               <>
-                <TableCell>Internal Ref</TableCell>
-                <TableCell>External Ref</TableCell>
+                <TableCell>{req.internalRef}</TableCell>
+                <TableCell>{req.externalRef}</TableCell>
               </>
             )}
             <TableCell>
               <Box display="flex" gap={1}>
                 <PreviewButton requestId={req.idNumber} />
-                {
+                {(canApproveMap?.[req.id] ?? false) && (
                   <>
-                    <ApproveButton requestId={req.idNumber} />
-                    <RejectButton requestId={req.idNumber} />
+                    <ApproveButton onClick={() => handleApprove(req.id)} />
+                    <RejectButton onClick={() => handleReject(req.id)} />
                   </>
-                }
+                )}
               </Box>
             </TableCell>
           </TableRow>

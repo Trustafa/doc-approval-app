@@ -21,6 +21,7 @@ export default function DatePickerField({
       <DatePicker
         label={label}
         value={value}
+        format="DD/MM/YYYY"
         onChange={(newValue) => onChange(newValue)}
       />
     </LocalizationProvider>

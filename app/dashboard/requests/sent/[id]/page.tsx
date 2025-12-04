@@ -12,15 +12,7 @@ export default function SentRequestDetail({
   const router = useRouter();
   const { id } = use(params);
 
-  const data = {
-    id: Number(id),
-    payee: `Invoice ${id}`,
-    requester: 'Alice',
-    approvers: ['Bob', 'Charlie'],
-    amount: 5000,
-    status: 'PENDING' as const,
-    requestDate: '2025-11-11',
-    currency: 'AED',
-  };
-  return <RequestDetailScreen data={data} onClickBack={() => router.back()} />;
+  return (
+    <RequestDetailScreen requestId={id} onClickBack={() => router.back()} />
+  );
 }

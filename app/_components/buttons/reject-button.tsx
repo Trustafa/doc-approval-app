@@ -3,18 +3,17 @@ import { IconButton } from '@mui/material';
 
 type RejectButtonProps = {
   button?: React.ReactNode;
-  requestId: number;
+  onClick: () => void;
 };
 
-export default function RejectButton({ button, requestId }: RejectButtonProps) {
-  const onClick = (e: React.MouseEvent) => {
-    e.stopPropagation();
-  };
-
+export default function RejectButton({ button, onClick }: RejectButtonProps) {
   if (button) {
     return (
       <span
-        onClick={(e) => onClick(e)}
+        onClick={(e) => {
+          e.stopPropagation();
+          onClick();
+        }}
         onMouseDown={(e) => e.stopPropagation()}
       >
         {button}
@@ -26,7 +25,10 @@ export default function RejectButton({ button, requestId }: RejectButtonProps) {
     <IconButton
       aria-label="reject"
       color="error"
-      onClick={(e) => e.stopPropagation()}
+      onClick={(e) => {
+        e.stopPropagation();
+        onClick();
+      }}
       onMouseDown={(e) => e.stopPropagation()}
     >
       <Clear />

@@ -16,9 +16,11 @@ import {
   useMediaQuery,
   useTheme,
 } from '@mui/material';
-import { usePathname } from 'next/navigation';
-import { useState } from 'react';
+import { usePathname, useRouter } from 'next/navigation';
+import { useEffect, useState } from 'react';
 import SideNav from '../_components/nav-side';
+import { logOut } from '../api/_client/auth.client';
+import { getMe } from '../api/_client/user.client';
 
 const drawerWidth = 240;
 
@@ -28,17 +30,45 @@ const titles: Record<string, string> = {
   '/dashboard/requests/sent': 'Sent Requests',
 };
 
+async function getUserName() {
+  const res = await getMe();
+
+  if (!res.success) {
+    alert(res.status);
+    return;
+  }
+
+  return res.data.name;
+}
 export default function Layout({ children }: { children: React.ReactNode }) {
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('md'));
+  const router = useRouter();
 
   const [mobileOpen, setMobileOpen] = useState(false);
+  const [username, setUsername] = useState<string | undefined>('');
+
+  useEffect(() => {
+    async function fetchData() {
+      setUsername(await getUserName());
+    }
+
+    fetchData();
+  }, []);
 
   const pathname = usePathname();
   const pageTitle = titles[pathname] || 'Document Approval';
 
   const toggleMobileDrawer = () => {
     setMobileOpen((prev) => !prev);
+  };
+
+  const onLogout = async () => {
+    const res = await logOut();
+
+    if (res.success) {
+      router.push('/login');
+    }
   };
 
   const drawer = (
@@ -57,6 +87,8 @@ export default function Layout({ children }: { children: React.ReactNode }) {
           ref: '/dashboard/requests/sent',
         },
       ]}
+      username={username ?? ''}
+      onLogout={onLogout}
     />
   );
 

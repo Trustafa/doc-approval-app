@@ -8,14 +8,22 @@ import {
   useMediaQuery,
   useTheme,
 } from '@mui/material';
+import ApproveButton from '../buttons/approve-button';
+import RejectButton from '../buttons/reject-button';
 
 type DetailsBottomBarProps = {
   amount: number;
+  handleApprove: () => void;
+  handleReject: () => void;
 };
 
-export default function DetailsBottomBar({ amount }: DetailsBottomBarProps) {
+export default function DetailsBottomBar({
+  amount,
+  handleApprove,
+  handleReject,
+}: DetailsBottomBarProps) {
   const theme = useTheme();
-  const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
+  const isMobile = useMediaQuery(theme.breakpoints.down('md'));
   return (
     <Paper
       sx={{
@@ -41,22 +49,32 @@ export default function DetailsBottomBar({ amount }: DetailsBottomBarProps) {
       </Box>
 
       <Box sx={{ display: 'flex', gap: 1, justifyContent: 'space-between' }}>
-        <Button
-          variant="contained"
-          color="success"
-          onClick={() => {}}
-          sx={{ mr: 1, width: isMobile ? '100%' : 'default' }}
-        >
-          Approve
-        </Button>
-        <Button
-          variant="contained"
-          color="error"
-          onClick={() => {}}
-          sx={{ mr: 1, width: isMobile ? '100%' : 'default' }}
-        >
-          Reject
-        </Button>
+        <ApproveButton
+          onClick={handleApprove}
+          button={
+            <Button
+              variant="contained"
+              color="success"
+              onClick={() => {}}
+              sx={{ mr: 1, width: isMobile ? '100%' : 'default' }}
+            >
+              Approve
+            </Button>
+          }
+        />
+        <RejectButton
+          onClick={handleReject}
+          button={
+            <Button
+              variant="contained"
+              color="error"
+              onClick={() => {}}
+              sx={{ mr: 1, width: isMobile ? '100%' : 'default' }}
+            >
+              Reject
+            </Button>
+          }
+        />
       </Box>
     </Paper>
   );

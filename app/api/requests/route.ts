@@ -1,18 +1,18 @@
 import z from 'zod';
 import { findLoggedInUser } from '../_services/auth.service';
-import { prisma } from '../prisma';
 import { toRequestResponse } from '../_services/request.service';
+import { prisma } from '../prisma';
 
 const createRequestSchema = z.object({
-  title: z.string(),
+  title: z.string().nonempty(),
   description: z.string().optional(),
-  payee: z.string(),
+  payee: z.string().nonempty(),
   amount: z.number(),
   currency: z.string(),
   internalRef: z.string().optional(),
   externalRef: z.string().optional(),
   approverIds: z.string().array(),
-  approvalFileId: z.string(),
+  approvalFileId: z.string().nonempty(),
   supportingFileIds: z.string().array().optional(),
   approvalFileDate: z.coerce.date(),
 });

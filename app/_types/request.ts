@@ -1,6 +1,5 @@
 export type RequestFilters = {
   payee?: string;
-  name?: string;
   idNumber?: number;
   status?: string;
   amountFrom?: number;

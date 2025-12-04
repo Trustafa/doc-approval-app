@@ -1,6 +1,7 @@
 import { toApprovalResponse } from '@/app/api/_services/approval.service';
 import { findLoggedInUser } from '@/app/api/_services/auth.service';
 import { prisma } from '@/app/api/prisma';
+import { ApprovalDecision } from '@/generated/prisma/enums';
 
 export async function GET(
   _: unknown,
@@ -31,6 +32,10 @@ export async function GET(
     {
       data: request.approvals.map(toApprovalResponse),
       count: request.approvals.length,
+      canApprove: request.approvals.some(
+        (a) =>
+          a.approverId === user.id && a.decision === ApprovalDecision.PENDING
+      ),
     },
     { status: 200 }
   );

@@ -84,6 +84,7 @@ export default function ControlledFileUpload<T extends FieldValues>({
         multiple={multiple}
         ref={fileInputRef}
         style={{ display: 'none' }}
+        accept="application/pdf"
         onChange={(e) => uploadFiles(e)}
       />
 

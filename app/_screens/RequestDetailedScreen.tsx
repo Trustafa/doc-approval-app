@@ -69,6 +69,8 @@ export default function RequestDetailScreen({
     approvers: [],
   });
 
+  const [canApprove, setCanApprove] = useState(false);
+
   const handleChange = (event: React.SyntheticEvent, newValue: number) => {
     setTabVal(newValue);
   };
@@ -93,6 +95,8 @@ export default function RequestDetailScreen({
         ...request.data,
         approvers: approvals.data.map((a) => a.approver.name) ?? [],
       });
+
+      setCanApprove(approvals.canApprove);
     }
 
     fetchRequestDetails();
@@ -102,9 +106,13 @@ export default function RequestDetailScreen({
       <IconButton onClick={onClickBack} sx={{ zIndex: 10 }}>
         <ArrowBackIcon />
       </IconButton>
-      <Typography variant="h2">{data.payee}</Typography>
+      <Typography variant="h2" sx={{ mb: 2 }}>
+        {data.payee}
+      </Typography>
       <Typography variant="h5" sx={{ mb: 2 }}>
-        {data.amount.toLocaleString()}
+        {`${data.amount.toLocaleString(undefined, {
+          minimumFractionDigits: 2,
+        })} ${data.currency}`}
       </Typography>
       <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
         <Tabs
@@ -118,15 +126,17 @@ export default function RequestDetailScreen({
       </Box>
       <CustomTabPanel value={tabVal} index={0}>
         <ApprovalDetailsTable data={data} />
+      </CustomTabPanel>
+      <CustomTabPanel value={tabVal} index={1}>
+        Timeline
+      </CustomTabPanel>
+      {canApprove && (
         <DetailsBottomBar
           amount={data.amount}
           handleApprove={() => handleApprove(data.id)}
           handleReject={() => handleReject(data.id)}
         />
-      </CustomTabPanel>
-      <CustomTabPanel value={tabVal} index={1}>
-        Timeline
-      </CustomTabPanel>
+      )}
     </Box>
   );
 }

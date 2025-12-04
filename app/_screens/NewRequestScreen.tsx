@@ -75,7 +75,7 @@ export default function NewRequestScreen() {
       alert(`Error ${res.status}`);
     }
 
-    router.push('dashboard/requests/sent');
+    router.push('/dashboard/requests/sent');
   };
 
   return (

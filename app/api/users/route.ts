@@ -1,4 +1,5 @@
 import { findLoggedInUser } from '../_services/auth.service';
+import { toUserMinimalResponse } from '../_services/user.service';
 import { prisma } from '../prisma';
 
 export async function GET(): Promise<Response> {
@@ -9,5 +10,8 @@ export async function GET(): Promise<Response> {
 
   const users = await prisma.user.findMany();
 
-  return Response.json({ data: users }, { status: 200 });
+  return Response.json(
+    { data: users.map(toUserMinimalResponse) },
+    { status: 200 }
+  );
 }

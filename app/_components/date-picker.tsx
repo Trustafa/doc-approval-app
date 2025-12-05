@@ -23,6 +23,7 @@ export default function DatePickerField({
         value={value}
         format="DD/MM/YYYY"
         onChange={(newValue) => onChange(newValue)}
+        sx={{ background: 'white' }}
       />
     </LocalizationProvider>
   );

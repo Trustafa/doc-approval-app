@@ -92,7 +92,7 @@ export const inputsCustomizations: Components<Theme> = {
               color: (theme.vars || theme).palette.text.primary,
               border: '1px solid',
               borderColor: gray[200],
-              backgroundColor: alpha(gray[50], 0.3),
+              backgroundColor: 'white',
               '&:hover': {
                 backgroundColor: gray[100],
                 borderColor: gray[300],
@@ -162,14 +162,12 @@ export const inputsCustomizations: Components<Theme> = {
         textTransform: 'none',
         fontWeight: theme.typography.fontWeightMedium,
         letterSpacing: 0,
-        color: 'white',
-        backgroundColor: gray[900],
-        border: `1px solid ${gray[700]}`,
+        color: gray[900],
         '&:hover': {
-          backgroundColor: gray[700],
+          backgroundColor: gray[100],
         },
         '&:active': {
-          backgroundColor: gray[800],
+          backgroundColor: gray[200],
         },
         variants: [
           {
@@ -193,17 +191,15 @@ export const inputsCustomizations: Components<Theme> = {
             },
           },
           {
-            props: { variant: 'icon' },
+            props: { variant: 'contained' },
             style: {
-              backgroundColor: 'transparent',
-              border: 'none',
-              boxShadow: 'none',
-              color: 'black',
+              backgroundColor: gray[800],
+              color: 'white',
               '&:hover': {
-                backgroundColor: 'transparent',
+                backgroundColor: gray[600],
               },
               '&:active': {
-                backgroundColor: 'transparent',
+                backgroundColor: gray[700],
               },
             },
           },
@@ -344,6 +340,27 @@ export const inputsCustomizations: Components<Theme> = {
         typography: theme.typography.caption,
         marginBottom: 8,
       }),
+    },
+  },
+
+  MuiAutocomplete: {
+    styleOverrides: {
+      clearIndicator: {
+        padding: 4,
+        backgroundColor: 'transparent',
+        color: 'black',
+        border: 'none',
+        boxShadow: 'none',
+        '&:hover': { backgroundColor: 'transparent', opacity: 0.7 },
+      },
+      popupIndicator: {
+        padding: 4,
+        backgroundColor: 'transparent',
+        color: 'black',
+
+        border: 'none',
+        '&:hover': { backgroundColor: 'transparent', opacity: 0.7 },
+      },
     },
   },
 };

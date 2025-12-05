@@ -2,7 +2,7 @@ import { createTheme } from '@mui/material';
 
 declare module '@mui/material/IconButton' {
   interface IconButtonOwnProps {
-    variant?: 'icon' | 'button';
+    variant?: 'icon' | 'contained';
   }
 }
 

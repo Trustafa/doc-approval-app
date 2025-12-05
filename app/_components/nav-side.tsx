@@ -62,7 +62,7 @@ export default function SideNav({ items, username, onLogout }: SideNavProps) {
                   width: '100%',
                 }}
               >
-                <ListItemIcon>{item.icon}</ListItemIcon>
+                <ListItemIcon sx={{ pr: 3 }}>{item.icon}</ListItemIcon>
                 <ListItemText primary={item.text} />
 
                 {hasChildren ? isOpen ? <ExpandLess /> : <ExpandMore /> : null}

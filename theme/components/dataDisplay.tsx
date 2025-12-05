@@ -203,9 +203,11 @@ export const dataDisplayCustomizations: Components<Theme> = {
     styleOverrides: {
       root: {
         '&.MuiTableRow-head': {
-          backgroundColor: gray[100],
+          backgroundColor: gray[50],
+          color: 'white',
           borderRadius: 10,
           borderColor: gray[200],
+          padding: '2px 8px',
         },
 
         '&.MuiTableRow-hover': {

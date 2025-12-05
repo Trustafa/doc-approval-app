@@ -1,4 +1,5 @@
 'use client';
+import { currencyCodes } from '@/utils/constants';
 import { ArrowBack } from '@mui/icons-material';
 import { Box, Button, IconButton, Typography } from '@mui/material';
 import { useRouter } from 'next/navigation';
@@ -7,6 +8,7 @@ import { useForm } from 'react-hook-form';
 import ControlledFileUpload, {
   UploadedFileSummary,
 } from '../_components/controlled/controlled-file-upload';
+import { ControlledMultiSelect } from '../_components/controlled/controlled-multi-select';
 import ControlledStyledTextField from '../_components/controlled/controlled-styled-text-field';
 import {
   ControlledUserSelect,
@@ -162,12 +164,13 @@ export default function NewRequestScreen() {
             placeholder="Enter amount"
           />
 
-          <ControlledStyledTextField<NewRequestInput>
+          <ControlledMultiSelect<NewRequestInput>
             name="currency"
             control={control}
             label="Currency*"
             rules={{ required: 'Currency is required' }}
             placeholder="Enter Currency"
+            options={currencyCodes}
           />
         </Box>
         <ControlledUserSelect

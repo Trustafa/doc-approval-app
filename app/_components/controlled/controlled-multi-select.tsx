@@ -8,7 +8,7 @@ import StyledTextField from '../styled/styled-text-field';
 type ControlledMultiSelectProps<T extends FieldValues> =
   ControlledFieldProps<T> & {
     options: string[];
-    multiple: boolean;
+    multiple?: boolean;
   };
 
 export function ControlledMultiSelect<T extends FieldValues>({
@@ -17,7 +17,7 @@ export function ControlledMultiSelect<T extends FieldValues>({
   rules,
   label,
   options,
-  multiple,
+  multiple = false,
 }: ControlledMultiSelectProps<T>) {
   const {
     field: { onChange, value },
@@ -25,7 +25,7 @@ export function ControlledMultiSelect<T extends FieldValues>({
   } = useController({ name, control, rules });
 
   return (
-    <Box sx={{ display: 'flex', flexDirection: 'column', mb: 2 }}>
+    <Box sx={{ display: 'flex', flexDirection: 'column', mb: 2, flex: 1 }}>
       <Typography variant="caption" sx={{ mb: 0.5, color: 'text.secondary' }}>
         {label}
       </Typography>

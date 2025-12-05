@@ -116,7 +116,11 @@ export default function RequestsTable({
               <TableCell>{req.idNumber}</TableCell>
               <TableCell>{req.createdAt.toLocaleDateString('en-GB')}</TableCell>
               <TableCell>{req.payee}</TableCell>
-              <TableCell>{req.amount.toFixed(2)}</TableCell>
+              <TableCell>
+                {req.amount.toLocaleString(undefined, {
+                  minimumFractionDigits: 2,
+                })}
+              </TableCell>
               <TableCell>{req.currency}</TableCell>
               {requestType === 'Received' ? (
                 <>

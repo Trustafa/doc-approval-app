@@ -1,6 +1,11 @@
 'use client';
 
-import { ExpandLess, ExpandMore, Logout } from '@mui/icons-material';
+import {
+  AccountCircle,
+  ExpandLess,
+  ExpandMore,
+  Logout,
+} from '@mui/icons-material';
 import {
   Box,
   Collapse,
@@ -109,6 +114,9 @@ export default function SideNav({ items, username, onLogout }: SideNavProps) {
         }}
       >
         <Typography variant="body2" sx={{ fontWeight: 500 }}>
+          <IconButton>
+            <AccountCircle />
+          </IconButton>
           {username}
         </Typography>
 

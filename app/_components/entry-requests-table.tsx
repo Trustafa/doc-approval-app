@@ -7,6 +7,7 @@ import {
   TableBody,
   TableCell,
   TableHead,
+  TablePagination,
   TableRow,
 } from '@mui/material';
 import { useRouter } from 'next/navigation';
@@ -22,7 +23,12 @@ type RequestsTableProps = {
   data: RequestResponse[];
   baseRoute: string;
   requestType: RequestType;
-  canApproveMap: Record<string, boolean>;
+  paginationProps: {
+    page: number;
+    setPage: (page: number) => void;
+    totalCount: number;
+    rowsPerPage: number;
+  };
 };
 
 const columnWidths = {
@@ -54,13 +60,31 @@ export default function RequestsTable({
   data,
   baseRoute,
   requestType,
-  canApproveMap,
+  paginationProps,
 }: RequestsTableProps) {
   const router = useRouter();
   const { openPreview, dialog } = usePreviewDialog();
 
+  const { page, setPage, totalCount, rowsPerPage } = paginationProps;
+
+  const canApprove = (status: ApprovalDecision | null) => {
+    if (!status) return false;
+    return requestType === 'Received' && status === 'PENDING';
+  };
+
   return (
     <Box>
+      <Box display="flex" justifyContent="flex-end" mb={1}>
+        <TablePagination
+          component="div"
+          count={totalCount}
+          rowsPerPage={rowsPerPage}
+          page={page}
+          onPageChange={(_, newPage) => setPage(newPage)}
+          rowsPerPageOptions={[]}
+          onRowsPerPageChange={undefined}
+        />
+      </Box>
       <Table
         sx={{
           borderCollapse: 'separate',
@@ -142,7 +166,7 @@ export default function RequestsTable({
                     onClick={() => openPreview(req.approvalFile?.id ?? '')}
                   />
 
-                  {(canApproveMap?.[req.id] ?? false) && (
+                  {canApprove(req.status) && (
                     <>
                       <ActionButton
                         buttonType="Approve"

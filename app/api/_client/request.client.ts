@@ -35,7 +35,7 @@ export async function getRequests(
   if (filters?.sortBy) query.set('sortBy', filters.sortBy);
   if (filters?.sortOrder) query.set('sortOrder', filters.sortOrder);
 
-  if (params?.page) query.set('page', String(params.page));
+  if (params?.page) query.set('page', String(params.page + 1));
   if (params?.pageSize) query.set('pageSize', String(params.pageSize));
 
   const res = await apiFetch(

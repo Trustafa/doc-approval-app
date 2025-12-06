@@ -2,26 +2,20 @@
 
 import RequestsTable from '@/app/_components/entry-requests-table';
 import SearchFilters from '@/app/_components/search-filters';
-import { RequestFilters, RequestType } from '@/app/_types/request';
+import { RequestType } from '@/app/_types/request';
 import {
   approveRequest,
   rejectRequest,
 } from '@/app/api/_client/approval.client';
-import { RequestResponse } from '@/app/api/_services/request.service';
+import { useRequests } from '@/hooks/RequestsContext';
 import { Add } from '@mui/icons-material';
 import { Box, IconButton, Typography } from '@mui/material';
 import { useRouter } from 'next/navigation';
 
 type RequestsScreenProps = {
   title: string;
-  data: RequestResponse[];
   baseRoute: string;
   requestType: RequestType;
-  filters: RequestFilters;
-  applyFilters: (f: RequestFilters) => void;
-  page: number;
-  setPage: (page: number) => void;
-  canApproveMap: Record<string, boolean>;
 };
 
 export async function handleApprove(requestId: string) {
@@ -44,13 +38,11 @@ export async function handleReject(requestId: string) {
 
 export default function DesktopRequestsView({
   title,
-  data,
   baseRoute,
   requestType,
-  applyFilters,
-  canApproveMap,
 }: RequestsScreenProps) {
   const router = useRouter();
+  const { data, total, page, setPage, setFilters, pageSize } = useRequests();
 
   const new_request_button = (
     <IconButton
@@ -75,18 +67,23 @@ export default function DesktopRequestsView({
         display="flex"
         alignItems="center"
         justifyContent="space-between"
-        sx={{ mb: 4 }}
+        sx={{ m: 2 }}
       >
         <Typography variant="h2">{title}</Typography>
         {requestType === 'Sent' && new_request_button}
       </Box>
 
-      <SearchFilters onSearch={applyFilters} requestType={requestType} />
+      <SearchFilters onSearch={setFilters} requestType={requestType} />
       <RequestsTable
         data={data}
         baseRoute={baseRoute}
         requestType={requestType}
-        canApproveMap={canApproveMap}
+        paginationProps={{
+          page,
+          setPage,
+          totalCount: total,
+          rowsPerPage: pageSize,
+        }}
       />
     </Box>
   );

@@ -2,33 +2,30 @@
 
 import { RequestEntry } from '@/app/_components/entry-requests-card';
 import SearchFilters from '@/app/_components/search-filters';
-import { RequestFilters, RequestType } from '@/app/_types/request';
-import { RequestResponse } from '@/app/api/_services/request.service';
+import { RequestType } from '@/app/_types/request';
+import { ApprovalDecision } from '@/generated/prisma/enums';
+import { useRequests } from '@/hooks/RequestsContext';
 import { usePreviewDialog } from '@/hooks/use-preview-dialog';
 import { Add } from '@mui/icons-material';
-import { Box, IconButton, Paper } from '@mui/material';
+import { Box, IconButton, Pagination, Paper, Stack } from '@mui/material';
 import { useRouter } from 'next/navigation';
 
 type RequestsScreenProps = {
-  data: RequestResponse[];
   baseRoute: string;
   requestType: RequestType;
-  filters: RequestFilters;
-  applyFilters: (f: RequestFilters) => void;
-  page: number;
-  setPage: (page: number) => void;
-  canApproveMap: Record<string, boolean>;
 };
 
 export default function MobileRequestsView({
-  data,
   baseRoute,
   requestType,
-  applyFilters,
-  canApproveMap,
 }: RequestsScreenProps) {
   const router = useRouter();
+  const { data, total, page, setPage, setFilters, pageSize } = useRequests();
 
+  const canApprove = (status: ApprovalDecision | null) => {
+    if (!status) return false;
+    return requestType === 'Received' && status === 'PENDING';
+  };
   const { openPreview, dialog } = usePreviewDialog();
   const new_request_button = (
     <IconButton
@@ -52,17 +49,26 @@ export default function MobileRequestsView({
         flexDirection: 'column',
       }}
     >
-      <SearchFilters onSearch={applyFilters} requestType={requestType} />
+      <SearchFilters onSearch={setFilters} requestType={requestType} />
       {data.map((item) => (
         <RequestEntry
           key={item.id}
           data={item}
           sx={{ mb: 2 }}
           onClick={() => router.push(`${baseRoute}/${item.id}`)}
-          viewOnly={!canApproveMap[item.id]}
+          viewOnly={canApprove(item.status)}
           openPreview={openPreview}
         />
       ))}
+      <Stack spacing={2} alignItems="center" mt={2}>
+        <Pagination
+          count={Math.ceil(total / pageSize)}
+          page={page + 1}
+          onChange={(_, value) => setPage(value - 1)}
+          color="primary"
+        />
+      </Stack>
+
       {dialog}
       <Paper sx={{ position: 'fixed', bottom: 20 }}>
         {requestType === 'Sent' && new_request_button}

@@ -26,7 +26,7 @@ export default function DetailsBottomBar({
   return (
     <Paper
       sx={{
-        position: 'fixed',
+        position: 'sticky',
         bottom: 0,
         left: isMobile ? '0px' : '240px',
         right: 0,
@@ -36,7 +36,6 @@ export default function DetailsBottomBar({
         justifyContent: 'space-between',
         alignItems: 'center',
         borderTop: '1px solid #ccc',
-        zIndex: 1000,
       }}
       elevation={3}
     >

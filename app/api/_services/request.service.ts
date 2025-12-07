@@ -32,6 +32,14 @@ export type RequestWithApprovalsWithApprovers = Request &
     include: { approvals: { include: { approver: true } } };
   }>;
 
+export type DashboardStats = {
+  pendingForMe: number;
+  pendingByMe: number;
+  approvedByMe: number;
+  rejectedByMe: number;
+  totalRequests: number;
+};
+
 export type RequestResponse = {
   id: string;
   createdAt: Date;

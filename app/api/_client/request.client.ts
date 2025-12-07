@@ -1,5 +1,5 @@
 import { RequestFilters, RequestType } from '@/app/_types/request';
-import { RequestResponse } from '../_services/request.service';
+import { DashboardStats, RequestResponse } from '../_services/request.service';
 import { apiFetch } from './apiFetch';
 
 export type RequestsResult =
@@ -94,4 +94,16 @@ export async function submitRequest(data: {
   } else {
     return { success: true };
   }
+}
+
+export async function getDashboardStats() {
+  const res = await apiFetch('/api/requests/stats');
+
+  if (!res.ok) {
+    return { success: false, status: res.status };
+  }
+
+  const json = (await res.json()) as { data: DashboardStats };
+
+  return { success: true, data: json.data };
 }

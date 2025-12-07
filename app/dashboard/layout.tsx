@@ -26,7 +26,7 @@ import { getMe } from '../api/_client/user.client';
 const drawerWidth = 240;
 
 const titles: Record<string, string> = {
-  '/dashboard': 'Home',
+  '/dashboard': 'Dashboard',
   '/dashboard/requests/received': 'Received Requests',
   '/dashboard/requests/sent': 'Sent Requests',
 };

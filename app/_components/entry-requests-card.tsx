@@ -3,16 +3,11 @@
 import { colors } from '@/utils/colors';
 import { Card, CardContent, Typography } from '@mui/material';
 import { Box, SxProps, Theme } from '@mui/system';
-import {
-  handleApprove,
-  handleReject,
-} from '../_screens/(views)/DesktopRequestsView';
 import { RequestResponse } from '../api/_services/request.service';
 import ActionButton from './action-button';
 
 type ApprovalEntryProps = {
   data: RequestResponse;
-  viewOnly: boolean;
   onClick: () => void;
   openPreview: (id: string) => void;
   sx?: SxProps<Theme>;
@@ -22,7 +17,6 @@ export function RequestEntry({
   onClick,
   openPreview,
   sx,
-  viewOnly = true,
 }: ApprovalEntryProps) {
   return (
     <Card
@@ -98,18 +92,6 @@ export function RequestEntry({
               buttonType="Preview"
               onClick={() => openPreview(data.approvalFile?.id ?? '')}
             />
-            {!viewOnly && (
-              <>
-                <ActionButton
-                  buttonType="Approve"
-                  onClick={() => handleApprove(data.id)}
-                />
-                <ActionButton
-                  buttonType="Reject"
-                  onClick={() => handleReject(data.id)}
-                />
-              </>
-            )}
           </Box>
         </Box>
       </CardContent>

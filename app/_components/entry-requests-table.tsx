@@ -10,10 +10,6 @@ import {
   TableRow,
 } from '@mui/material';
 import { useRouter } from 'next/navigation';
-import {
-  handleApprove,
-  handleReject,
-} from '../_screens/(views)/DesktopRequestsView';
 import { RequestType } from '../_types/request';
 import { openApprovalFilePreview } from '../api/_client/file.client';
 import { RequestResponse } from '../api/_services/request.service';
@@ -65,11 +61,6 @@ export default function RequestsTable({
   const router = useRouter();
 
   const { page, setPage, totalCount, rowsPerPage } = paginationProps;
-
-  const canApprove = (status: ApprovalDecision | null) => {
-    if (!status) return false;
-    return requestType === 'Received' && status === 'PENDING';
-  };
 
   return (
     <Box>
@@ -164,19 +155,6 @@ export default function RequestsTable({
                     buttonType="Preview"
                     onClick={() => openApprovalFilePreview(req.id)}
                   />
-
-                  {canApprove(req.status) && (
-                    <>
-                      <ActionButton
-                        buttonType="Approve"
-                        onClick={() => handleApprove(req.id)}
-                      />
-                      <ActionButton
-                        buttonType="Reject"
-                        onClick={() => handleReject(req.id)}
-                      />
-                    </>
-                  )}
                 </Box>
               </TableCell>
             </TableRow>

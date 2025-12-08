@@ -106,7 +106,7 @@ export default function RequestDetailScreen({
       <IconButton onClick={onClickBack} sx={{ mb: 2 }}>
         <ArrowBackIcon />
       </IconButton>
-      <Box sx={{ display: 'flex', flexDirection: 'column' }}>
+      <Box sx={{ display: 'flex', flexDirection: 'column', p: 1 }}>
         <Typography variant="subtitle1">{`ID: ${data.idNumber}`}</Typography>
         <Typography variant="h2" sx={{ mb: 2 }}>
           {data.payee}

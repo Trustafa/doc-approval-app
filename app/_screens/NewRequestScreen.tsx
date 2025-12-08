@@ -86,7 +86,7 @@ export default function NewRequestScreen() {
   };
 
   return (
-    <Box>
+    <Box sx={{ p: 2 }}>
       <IconButton onClick={() => router.back()} sx={{ zIndex: 10 }}>
         <ArrowBack />
       </IconButton>

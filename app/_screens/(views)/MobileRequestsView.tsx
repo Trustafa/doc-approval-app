@@ -6,7 +6,7 @@ import { RequestType } from '@/app/_types/request';
 import { openPreview } from '@/app/api/_client/file.client';
 import { useRequests } from '@/hooks/RequestsContext';
 import { Add } from '@mui/icons-material';
-import { Box, IconButton, Pagination, Paper, Stack } from '@mui/material';
+import { Box, IconButton, Pagination, Stack } from '@mui/material';
 import { useRouter } from 'next/navigation';
 
 type RequestsScreenProps = {
@@ -41,6 +41,7 @@ export default function MobileRequestsView({
         alignContent: 'center',
         display: 'flex',
         flexDirection: 'column',
+        p: 1,
       }}
     >
       <SearchFilters onSearch={setFilters} requestType={requestType} />
@@ -61,9 +62,9 @@ export default function MobileRequestsView({
           color="primary"
         />
       </Stack>
-      <Paper sx={{ position: 'fixed', bottom: 20 }}>
+      <Box sx={{ position: 'fixed', bottom: 10, left: 10 }}>
         {requestType === 'Sent' && new_request_button}
-      </Paper>
+      </Box>
     </Box>
   );
 }

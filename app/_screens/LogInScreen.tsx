@@ -5,10 +5,8 @@ import MuiCard from '@mui/material/Card';
 import {
   Box,
   Button,
-  Checkbox,
   CssBaseline,
   FormControl,
-  FormControlLabel,
   FormLabel,
   Link,
   Stack,
@@ -16,11 +14,9 @@ import {
 import { styled } from '@mui/material/styles';
 import Typography from '@mui/material/Typography';
 import { useRouter } from 'next/navigation';
-import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import AppTheme from '../../shared-theme/AppTheme';
 import ControlledStyledTextField from '../_components/controlled/controlled-styled-text-field';
-import ForgotPassword from '../_components/forgot-password-popup';
 import { logIn } from '../api/_client/auth.client';
 
 type LogInProps = {
@@ -71,7 +67,6 @@ const LogInContainer = styled(Stack)(({ theme }) => ({
 }));
 
 export default function LogInScreen(props: { disableCustomTheme?: boolean }) {
-  const [open, setOpen] = useState(false);
   const router = useRouter();
 
   const { handleSubmit, control, setError, setValue } = useForm<LogInProps>({
@@ -80,14 +75,6 @@ export default function LogInScreen(props: { disableCustomTheme?: boolean }) {
       password: '',
     },
   });
-
-  const handleClickOpen = () => {
-    setOpen(true);
-  };
-
-  const handleClose = () => {
-    setOpen(false);
-  };
 
   const onSubmit = async (data: LogInProps) => {
     const result = await logIn(data.email, data.password);
@@ -164,23 +151,9 @@ export default function LogInScreen(props: { disableCustomTheme?: boolean }) {
                 rules={{ required: 'Password is required' }}
               />
             </FormControl>
-            <FormControlLabel
-              control={<Checkbox value="remember" color="primary" />}
-              label="Remember me"
-            />
-            <ForgotPassword open={open} handleClose={handleClose} />
             <Button type="submit" fullWidth variant="contained">
               Log in
             </Button>
-            <Link
-              component="button"
-              type="button"
-              onClick={handleClickOpen}
-              variant="body2"
-              sx={{ alignSelf: 'center' }}
-            >
-              Forgot your password?
-            </Link>
             <Link
               href="/signup"
               variant="body2"

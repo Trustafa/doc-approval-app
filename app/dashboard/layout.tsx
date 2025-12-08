@@ -72,6 +72,14 @@ export default function Layout({ children }: { children: React.ReactNode }) {
     }
   };
 
+  const handleNavigate = (url: string) => {
+    setMobileOpen(false);
+
+    setTimeout(() => {
+      router.push(url);
+    }, 200);
+  };
+
   const drawer = (
     <SideNav
       items={[
@@ -90,6 +98,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
       ]}
       username={username ?? ''}
       onLogout={onLogout}
+      onNavigate={handleNavigate}
     />
   );
 

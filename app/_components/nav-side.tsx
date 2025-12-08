@@ -10,7 +10,6 @@ import {
   Box,
   Collapse,
   IconButton,
-  Link,
   List,
   ListItem,
   ListItemButton,
@@ -32,8 +31,14 @@ type SideNavProps = {
   items: NavItem[];
   username: string;
   onLogout: () => void;
+  onNavigate?: (url: string) => void;
 };
-export default function SideNav({ items, username, onLogout }: SideNavProps) {
+export default function SideNav({
+  items,
+  username,
+  onLogout,
+  onNavigate,
+}: SideNavProps) {
   const pathname = usePathname();
 
   const [open, setOpen] = useState<Record<string, boolean>>({});
@@ -58,9 +63,13 @@ export default function SideNav({ items, username, onLogout }: SideNavProps) {
             <Box key={item.text}>
               <ListItemButton
                 selected={active}
-                onClick={() => hasChildren && toggleDropdown(item.text)}
-                component={!hasChildren ? Link : 'div'}
-                href={hasChildren ? undefined : item.ref}
+                onClick={() => {
+                  if (hasChildren) {
+                    toggleDropdown(item.text);
+                  } else {
+                    onNavigate?.(item.ref); // 👈 call navigation instead of direct linking
+                  }
+                }}
                 style={{
                   textDecoration: 'none',
                   color: '#000',
@@ -83,8 +92,9 @@ export default function SideNav({ items, username, onLogout }: SideNavProps) {
                         <ListItem key={child.text}>
                           <ListItemButton
                             selected={childActive}
-                            component={Link}
-                            href={child.ref}
+                            onClick={() => {
+                              onNavigate?.(child.ref);
+                            }}
                             style={{
                               textDecoration: 'none',
                               color: '#000',

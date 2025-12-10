@@ -130,7 +130,6 @@ export default function SearchFilters({
         mb: 3,
         p: 2,
         borderRadius: 2,
-        backgroundColor: '#f5f5f5',
         display: 'flex',
         gap: 2,
       }}

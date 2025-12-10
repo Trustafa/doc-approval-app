@@ -1,7 +1,6 @@
 import CheckBoxOutlineBlankRoundedIcon from '@mui/icons-material/CheckBoxOutlineBlankRounded';
 import CheckRoundedIcon from '@mui/icons-material/CheckRounded';
 import RemoveRoundedIcon from '@mui/icons-material/RemoveRounded';
-import { outlinedInputClasses } from '@mui/material/OutlinedInput';
 import { alpha, Components, Theme } from '@mui/material/styles';
 import { svgIconClasses } from '@mui/material/SvgIcon';
 import { toggleButtonGroupClasses } from '@mui/material/ToggleButtonGroup';
@@ -298,16 +297,14 @@ export const inputsCustomizations: Components<Theme> = {
         padding: ownerState.multiline ? '8px 12px' : undefined,
         color: (theme.vars || theme).palette.text.primary,
         borderRadius: (theme.vars || theme).shape.borderRadius,
-        border: `1px solid ${(theme.vars || theme).palette.divider}`,
         backgroundColor: (theme.vars || theme).palette.background.default,
         transition: 'border 120ms ease-in',
 
-        '&:hover': {
+        '&:hover .MuiOutlinedInput-notchedOutline': {
           borderColor: gray[600],
         },
 
-        [`&.${outlinedInputClasses.focused}`]: {
-          outline: `3px solid ${alpha(brand[500], 0.5)}`,
+        [`&.Mui-focused .MuiOutlinedInput-notchedOutline`]: {
           borderColor: brand[400],
         },
 
@@ -337,9 +334,9 @@ export const inputsCustomizations: Components<Theme> = {
         },
       }),
 
-      notchedOutline: {
-        border: 'none',
-      },
+      notchedOutline: ({ theme }) => ({
+        borderColor: (theme.vars || theme).palette.divider,
+      }),
     },
   },
 

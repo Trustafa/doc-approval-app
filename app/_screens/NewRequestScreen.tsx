@@ -9,6 +9,7 @@ import ControlledFileUpload, {
   UploadedFileSummary,
 } from '../_components/controlled/controlled-file-upload';
 import { ControlledMultiSelect } from '../_components/controlled/controlled-multi-select';
+import ControlledNumericField from '../_components/controlled/controlled-numeric-field';
 import ControlledStyledTextField from '../_components/controlled/controlled-styled-text-field';
 import {
   ControlledUserSelect,
@@ -40,7 +41,7 @@ export default function NewRequestScreen() {
       externalRef: '',
       title: '',
       payee: '',
-      amount: 0,
+      amount: undefined,
       currency: '',
       approvers: [] as string[],
       description: '',
@@ -153,7 +154,7 @@ export default function NewRequestScreen() {
             gap: 2,
           }}
         >
-          <ControlledStyledTextField<NewRequestInput>
+          <ControlledNumericField<NewRequestInput>
             name="amount"
             control={control}
             type="number"

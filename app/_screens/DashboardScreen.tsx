@@ -2,10 +2,7 @@
 
 import { useResponsive } from '@/hooks/use-responsive';
 import AccessTimeOutlinedIcon from '@mui/icons-material/AccessTimeOutlined';
-import CancelOutlinedIcon from '@mui/icons-material/CancelOutlined';
-import CheckCircleOutlinedIcon from '@mui/icons-material/CheckCircleOutlined';
 import ErrorOutlineOutlinedIcon from '@mui/icons-material/ErrorOutlineOutlined';
-import HistoryOutlinedIcon from '@mui/icons-material/HistoryOutlined';
 import { Box, Typography } from '@mui/material';
 import { useEffect, useState } from 'react';
 import SummaryCard from '../_components/dashboard-summary-card';
@@ -56,34 +53,16 @@ export default function DashboardScreen({}: DashboardScreenProps) {
     >
       {!isMobile && <Typography variant="h2">Dashboard</Typography>}
       <SummaryCard
-        title="Pending Approvals"
-        caption="Number of approvals awaiting your action"
+        title="Approvals Required"
+        caption="Requests that need your approval"
         count={stats.pendingForMe}
         icon={<ErrorOutlineOutlinedIcon sx={cardIconSx} />}
       />
       <SummaryCard
-        title="Pending Requests"
-        caption="Number of pending requests"
+        title="My Pending Requests"
+        caption="Requests you submitted that are still pending"
         count={stats.pendingByMe}
         icon={<AccessTimeOutlinedIcon sx={cardIconSx} />}
-      />
-      <SummaryCard
-        title="Approved"
-        caption="Number of requests approved by you"
-        count={stats.approvedByMe}
-        icon={<CheckCircleOutlinedIcon sx={cardIconSx} />}
-      />
-      <SummaryCard
-        title="Rejected"
-        caption="Number of requests rejected by you"
-        count={stats.rejectedByMe}
-        icon={<CancelOutlinedIcon sx={cardIconSx} />}
-      />
-      <SummaryCard
-        title="History"
-        caption="Total number of requests sent by you"
-        count={stats.totalRequests}
-        icon={<HistoryOutlinedIcon sx={cardIconSx} />}
       />
     </Box>
   );

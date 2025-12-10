@@ -6,6 +6,7 @@ type SummaryCardProps = {
   caption: string;
   count: number;
   icon: ReactNode;
+  onClick: () => void;
 };
 
 export default function SummaryCard({
@@ -13,6 +14,7 @@ export default function SummaryCard({
   caption,
   count,
   icon,
+  onClick,
 }: SummaryCardProps) {
   return (
     <Card
@@ -23,7 +25,15 @@ export default function SummaryCard({
         maxWidth: 460,
         p: 3,
         minHeight: 100,
+        cursor: 'pointer',
+        transition: 'background-color 0.3s, box-shadow 0.3s',
+
+        '&:hover': {
+          boxShadow: '0 4px 12px rgba(0,0,0,0.08)',
+          backgroundColor: 'rgba(0,0,0,0.01)',
+        },
       }}
+      onClick={onClick}
     >
       {/* Watermark Icon */}
       <Box

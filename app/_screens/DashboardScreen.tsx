@@ -4,6 +4,7 @@ import { useResponsive } from '@/hooks/use-responsive';
 import AccessTimeOutlinedIcon from '@mui/icons-material/AccessTimeOutlined';
 import ErrorOutlineOutlinedIcon from '@mui/icons-material/ErrorOutlineOutlined';
 import { Box, Typography } from '@mui/material';
+import { redirect } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import SummaryCard from '../_components/dashboard-summary-card';
 import { getDashboardStats } from '../api/_client/request.client';
@@ -57,12 +58,14 @@ export default function DashboardScreen({}: DashboardScreenProps) {
         caption="Requests that need your approval"
         count={stats.pendingForMe}
         icon={<ErrorOutlineOutlinedIcon sx={cardIconSx} />}
+        onClick={() => redirect('/dashboard/requests/received?status=PENDING')}
       />
       <SummaryCard
         title="My Pending Requests"
         caption="Requests you submitted that are still pending"
         count={stats.pendingByMe}
         icon={<AccessTimeOutlinedIcon sx={cardIconSx} />}
+        onClick={() => redirect('/dashboard/requests/sent?status=PENDING')}
       />
     </Box>
   );

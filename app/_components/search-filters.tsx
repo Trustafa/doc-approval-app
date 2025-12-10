@@ -23,17 +23,19 @@ import DatePickerField from './date-picker';
 type SearchFiltersProps = {
   onSearch: (f: RequestFilters) => void;
   requestType: RequestType;
+  defaultFilters?: Partial<RequestFilters>;
 };
 
 export default function SearchFilters({
   onSearch,
   requestType,
+  defaultFilters = {},
 }: SearchFiltersProps) {
   const [sortOrder, setSortOrder] = useState<'asc' | 'desc'>('asc');
   const [filters, setFilters] = useState<RequestFilters>({
     idNumber: undefined,
     payee: '',
-    status: '',
+    status: requestType === 'Received' ? 'PENDING' : '',
     amountFrom: undefined,
     fromDate: '',
     toDate: '',
@@ -41,6 +43,7 @@ export default function SearchFilters({
     externalRef: '',
     sortBy: '',
     sortOrder: 'asc',
+    ...defaultFilters,
   });
 
   const reset = () => {

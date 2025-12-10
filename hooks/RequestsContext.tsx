@@ -34,14 +34,16 @@ export const useRequests = () => {
 export const RequestsProvider = ({
   children,
   requestType,
+  defaultFilters,
 }: {
   children: ReactNode;
   requestType: RequestType;
+  defaultFilters?: Partial<RequestFilters>;
 }) => {
   const [data, setData] = useState<RequestResponse[]>([]);
   const [total, setTotal] = useState(0);
   const [page, setPage] = useState(0);
-  const [filters, setFilters] = useState<RequestFilters>({});
+  const [filters, setFilters] = useState<RequestFilters>({ ...defaultFilters });
   const pageSize = 5;
   const [isLoading, setIsLoading] = useState(false);
 

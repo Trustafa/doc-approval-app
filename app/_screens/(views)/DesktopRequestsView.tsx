@@ -42,7 +42,8 @@ export default function DesktopRequestsView({
   requestType,
 }: RequestsScreenProps) {
   const router = useRouter();
-  const { data, total, page, setPage, setFilters, pageSize } = useRequests();
+  const { data, total, page, setPage, filters, setFilters, pageSize } =
+    useRequests();
 
   const new_request_button = (
     <IconButton
@@ -73,7 +74,11 @@ export default function DesktopRequestsView({
         {requestType === 'Sent' && new_request_button}
       </Box>
 
-      <SearchFilters onSearch={setFilters} requestType={requestType} />
+      <SearchFilters
+        onSearch={setFilters}
+        requestType={requestType}
+        defaultFilters={filters}
+      />
       <RequestsTable
         data={data}
         baseRoute={baseRoute}

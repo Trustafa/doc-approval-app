@@ -1,7 +1,9 @@
 'use client';
 
 import { RequestsProvider } from '@/hooks/RequestsContext';
+import { parseRequestFiltersFromSearchParams } from '@/utils/parse-search-param-filters';
 import { Box, useMediaQuery, useTheme } from '@mui/material';
+import { useSearchParams } from 'next/navigation';
 import { RequestType } from '../_types/request';
 import { getApprovalsForRequest } from '../api/_client/approval.client';
 import DesktopRequestsView from './(views)/DesktopRequestsView';
@@ -34,8 +36,11 @@ export default function RequestsScreen({
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('md'));
 
+  const searchParams = useSearchParams();
+  const defaultFilters = parseRequestFiltersFromSearchParams(searchParams);
+
   return (
-    <RequestsProvider requestType={requestType}>
+    <RequestsProvider requestType={requestType} defaultFilters={defaultFilters}>
       <Box>
         {isMobile ? (
           <MobileRequestsView baseRoute={baseRoute} requestType={requestType} />

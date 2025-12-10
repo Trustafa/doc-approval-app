@@ -19,7 +19,8 @@ export default function MobileRequestsView({
   requestType,
 }: RequestsScreenProps) {
   const router = useRouter();
-  const { data, total, page, setPage, setFilters, pageSize } = useRequests();
+  const { data, total, page, setPage, filters, setFilters, pageSize } =
+    useRequests();
 
   const new_request_button = (
     <IconButton
@@ -44,7 +45,11 @@ export default function MobileRequestsView({
         p: 1,
       }}
     >
-      <SearchFilters onSearch={setFilters} requestType={requestType} />
+      <SearchFilters
+        onSearch={setFilters}
+        requestType={requestType}
+        defaultFilters={filters}
+      />
       {data.map((item) => (
         <RequestEntry
           key={item.id}

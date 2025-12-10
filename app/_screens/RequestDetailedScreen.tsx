@@ -124,15 +124,15 @@ export default function RequestDetailScreen({
           aria-label="Detailed View Tabs"
         >
           <Tab label="Details" {...a11yProps(0)} />
-          <Tab label="Timeline" {...a11yProps(1)} />
+          {/* <Tab label="Timeline" {...a11yProps(1)} /> */}
         </Tabs>
       </Box>
       <CustomTabPanel value={tabVal} index={0}>
         <ApprovalDetailsTable data={data} />
       </CustomTabPanel>
-      <CustomTabPanel value={tabVal} index={1}>
+      {/* <CustomTabPanel value={tabVal} index={1}>
         Timeline
-      </CustomTabPanel>
+      </CustomTabPanel> */}
       {canApprove && (
         <DetailsBottomBar
           amount={data.amount}

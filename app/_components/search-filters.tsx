@@ -17,6 +17,7 @@ import {
   useTheme,
 } from '@mui/material';
 import dayjs from 'dayjs';
+import { useRouter, useSearchParams } from 'next/navigation';
 import { useState } from 'react';
 import { RequestFilters, RequestType } from '../_types/request';
 import DatePickerField from './date-picker';
@@ -31,18 +32,23 @@ export default function SearchFilters({
   requestType,
   defaultFilters = {},
 }: SearchFiltersProps) {
+  const router = useRouter();
+  const searchParams = useSearchParams();
+
   const [sortOrder, setSortOrder] = useState<'asc' | 'desc'>('asc');
   const [filters, setFilters] = useState<RequestFilters>({
-    idNumber: undefined,
-    payee: '',
-    status: requestType === 'Received' ? 'PENDING' : '',
-    amountFrom: undefined,
-    fromDate: '',
-    toDate: '',
-    internalRef: '',
-    externalRef: '',
-    sortBy: '',
-    sortOrder: 'asc',
+    idNumber: Number(searchParams.get('idNumber')) || undefined,
+    payee: searchParams.get('payee') || '',
+    status:
+      searchParams.get('status') ||
+      (requestType === 'Received' ? 'PENDING' : ''),
+    amountFrom: Number(searchParams.get('amountFrom')) || undefined,
+    fromDate: searchParams.get('fromDate') || '',
+    toDate: searchParams.get('toDate') || '',
+    internalRef: searchParams.get('internalRef') || '',
+    externalRef: searchParams.get('externalRef') || '',
+    sortBy: searchParams.get('sortBy') || '',
+    sortOrder: (searchParams.get('sortOrder') as 'asc' | 'desc') || 'asc',
     ...defaultFilters,
   });
 
@@ -50,7 +56,7 @@ export default function SearchFilters({
     setFilters({
       idNumber: undefined,
       payee: '',
-      status: '',
+      status: 'ALL',
       amountFrom: undefined,
       fromDate: '',
       toDate: '',
@@ -61,6 +67,19 @@ export default function SearchFilters({
     });
   };
 
+  const updateURL = (newFilters: RequestFilters) => {
+    const params = new URLSearchParams();
+
+    Object.entries(newFilters).forEach(([key, value]) => {
+      if (value !== undefined && value !== '' && value !== null) {
+        params.set(key, String(value));
+      } else {
+        params.delete(key);
+      }
+    });
+
+    router.push(`?${params.toString()}`);
+  };
   const handleChange = (
     key: keyof RequestFilters,
     value: string | number | null
@@ -70,6 +89,7 @@ export default function SearchFilters({
 
   const onApply = () => {
     onSearch(filters);
+    updateURL(filters);
   };
 
   const toggleOrder = () => {

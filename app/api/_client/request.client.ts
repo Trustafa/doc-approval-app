@@ -107,3 +107,45 @@ export async function getDashboardStats() {
 
   return { success: true, data: json.data };
 }
+
+export async function updateRequest(data: {
+  id: string;
+  title: string;
+  description?: string;
+  payee: string;
+  amount: number;
+  currency: string;
+  internalRef?: string;
+  externalRef?: string;
+  approverIds: string[];
+  approvalFileId: string;
+  supportingFileIds?: string[];
+  approvalFileDate: Date;
+}) {
+  const res = await apiFetch(`/api/requests/${data.id}`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(data),
+  });
+
+  if (!res.ok) {
+    return { success: false, status: res.status };
+  } else {
+    return { success: true };
+  }
+}
+
+export type RequestCanEditResult =
+  | { success: true; canEdit: boolean }
+  | { success: false; status: number };
+export async function canEditRequest(requestId: string) {
+  const res = await apiFetch(`/api/requests/${requestId}/canEdit`);
+
+  if (!res.ok) {
+    return { success: false, status: res.status };
+  }
+
+  const data = (await res.json()) as { canEdit: boolean };
+
+  return { success: true, canEdit: data.canEdit };
+}

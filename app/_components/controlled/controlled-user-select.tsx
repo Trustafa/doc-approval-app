@@ -1,7 +1,7 @@
 'use client';
 import { ControlledFieldProps } from '@/utils/form-control-props.type';
 import { Autocomplete, Box, Typography } from '@mui/material';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { FieldValues, useController } from 'react-hook-form';
 import StyledTextField from '../styled/styled-text-field';
 
@@ -29,18 +29,39 @@ export function ControlledUserSelect<T extends FieldValues>({
 
   const [options, setOptions] = useState<UserData[]>([]);
   const [loading, setLoading] = useState(false);
+  const [allLoaded, setAllLoaded] = useState(false);
 
   const handleOpen = async () => {
-    if (options.length > 0) return;
+    if (allLoaded) return;
 
     setLoading(true);
     try {
       const users = await fetchUsers();
       setOptions(users);
+      setAllLoaded(true);
     } finally {
       setLoading(false);
     }
   };
+
+  // This will set the default user as an option so that it can be selected
+  useEffect(() => {
+    if (value?.[0] && options.every((o) => o.id !== value[0])) {
+      setLoading(true);
+      fetchUsers()
+        .then((users) => {
+          const defaultUser = users.find((u) => u.id === value[0]);
+          if (defaultUser)
+            setOptions((prev) => {
+              if (prev.some((o) => o.id === defaultUser.id)) return prev;
+              return [defaultUser, ...prev];
+            });
+          console.log('OPTIONS SET');
+          console.log('value:', value);
+        })
+        .finally(() => setLoading(false));
+    }
+  }, [value]);
 
   return (
     <Box sx={{ display: 'flex', flexDirection: 'column', mb: 2 }}>

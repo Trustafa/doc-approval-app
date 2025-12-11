@@ -63,7 +63,6 @@ export type RequestResponse = {
   approvalFile?: {
     id: string;
     filename: string;
-    sizeInBytes: number;
   };
 
   status: ApprovalDecision | null;

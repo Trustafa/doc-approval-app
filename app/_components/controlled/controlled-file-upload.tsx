@@ -64,7 +64,7 @@ export default function ControlledFileUpload<T extends FieldValues>({
     }
 
     setLoading(false);
-    onChange([...(value ?? []), ...uploaded]);
+    onChange(multiple ? [...(value ?? []), ...uploaded] : [...uploaded]);
 
     e.target.value = '';
   };

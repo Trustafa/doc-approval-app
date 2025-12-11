@@ -32,7 +32,7 @@ export function ControlledMultiSelect<T extends FieldValues>({
       <Autocomplete
         multiple={multiple}
         options={options}
-        value={value}
+        value={multiple ? (value ?? []) : (value ?? '')}
         onChange={(_, newValue) => onChange(newValue)}
         renderInput={(params) => (
           <StyledTextField

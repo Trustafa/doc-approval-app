@@ -1,13 +1,19 @@
 'use client';
 
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
-import { Box, IconButton, Tab, Tabs, Typography } from '@mui/material';
+import { Box, Button, IconButton, Tab, Tabs, Typography } from '@mui/material';
+import { redirect, usePathname, useRouter } from 'next/navigation';
+import { enqueueSnackbar } from 'notistack';
 import { useEffect, useState } from 'react';
 import DetailsBottomBar from '../_components/request-detailed/details-bottom-bar';
 import ApprovalDetailsTable from '../_components/request-detailed/entry-request-details-table';
-import { getApprovalsForRequest } from '../api/_client/approval.client';
-import { getRequestByID } from '../api/_client/request.client';
-import { handleApprove, handleReject } from './(views)/DesktopRequestsView';
+import {
+  approveRequest,
+  getApprovalsForRequest,
+  rejectRequest,
+} from '../api/_client/approval.client';
+import { canEditRequest, getRequestByID } from '../api/_client/request.client';
+import { RequestResponseWithFiles } from '../api/_services/request.service';
 
 type DetailedViewProps = {
   requestId: string;
@@ -46,8 +52,13 @@ export default function RequestDetailScreen({
   requestId,
   onClickBack,
 }: DetailedViewProps) {
+  const pathname = usePathname();
+  const router = useRouter();
+
   const [tabVal, setTabVal] = useState(0);
-  const [data, setData] = useState({
+  const [data, setData] = useState<
+    RequestResponseWithFiles & { approvers: string[] }
+  >({
     id: '',
     createdAt: new Date(),
     updatedAt: new Date(),
@@ -70,10 +81,30 @@ export default function RequestDetailScreen({
   });
 
   const [canApprove, setCanApprove] = useState(false);
+  const [canEdit, setCanEdit] = useState(false);
 
   const handleChange = (event: React.SyntheticEvent, newValue: number) => {
     setTabVal(newValue);
   };
+
+  async function handleApprove(requestId: string) {
+    const res = await approveRequest(requestId);
+    if (!res.success) {
+      enqueueSnackbar('Failed to approve request', { variant: 'error' });
+      return;
+    }
+
+    router.back();
+  }
+
+  async function handleReject(requestId: string) {
+    const res = await rejectRequest(requestId);
+    if (!res.success) {
+      enqueueSnackbar('Failed to reject request', { variant: 'error' });
+      return;
+    }
+    router.back();
+  }
 
   useEffect(() => {
     async function fetchRequestDetails() {
@@ -97,10 +128,19 @@ export default function RequestDetailScreen({
       });
 
       setCanApprove(approvals.canApprove);
+
+      const canEditRes = await canEditRequest(requestId);
+      if (!canEditRes.success) {
+        console.error(`Unable to retrieve edit`);
+        return;
+      }
+
+      setCanEdit(canEditRes.canEdit ?? false);
     }
 
     fetchRequestDetails();
   }, [requestId]);
+
   return (
     <Box>
       <IconButton onClick={onClickBack} sx={{ mb: 2 }}>
@@ -117,26 +157,40 @@ export default function RequestDetailScreen({
           })} ${data.currency}`}
         </Typography>
       </Box>
-      <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
+      <Box
+        sx={{
+          borderBottom: 1,
+          borderColor: 'divider',
+          display: 'flex',
+          justifyContent: 'space-between',
+          mr: 2,
+        }}
+      >
         <Tabs
           value={tabVal}
           onChange={handleChange}
           aria-label="Detailed View Tabs"
         >
           <Tab label="Details" {...a11yProps(0)} />
-          {/* <Tab label="Timeline" {...a11yProps(1)} /> */}
         </Tabs>
+        {canEdit && (
+          <Button
+            variant="contained"
+            onClick={() => redirect(`${pathname}/update`)}
+          >
+            Edit
+          </Button>
+        )}
       </Box>
       <CustomTabPanel value={tabVal} index={0}>
         <ApprovalDetailsTable data={data} />
       </CustomTabPanel>
-      {/* <CustomTabPanel value={tabVal} index={1}>
-        Timeline
-      </CustomTabPanel> */}
       {canApprove && (
         <DetailsBottomBar
           amount={data.amount}
-          handleApprove={() => handleApprove(data.id)}
+          handleApprove={() => {
+            handleApprove(data.id);
+          }}
           handleReject={() => handleReject(data.id)}
         />
       )}

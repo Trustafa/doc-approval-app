@@ -8,6 +8,7 @@ import {
   TableHead,
   TablePagination,
   TableRow,
+  Typography,
 } from '@mui/material';
 import { useRouter } from 'next/navigation';
 import { RequestType } from '../_types/request';
@@ -117,48 +118,57 @@ export default function RequestsTable({
         </TableHead>
 
         <TableBody>
-          {data.map((req) => (
-            <TableRow
-              hover
-              key={req.id}
-              sx={{
-                backgroundColor: (() => getRowBackgroundColor(req.status))(),
-                '&.MuiTableRow-root:hover': {
+          {data.length > 0 ? (
+            data.map((req) => (
+              <TableRow
+                hover
+                key={req.id}
+                sx={{
                   backgroundColor: (() => getRowBackgroundColor(req.status))(),
-                },
-              }}
-              onClick={() => router.push(`${baseRoute}/${req.id}`)}
-            >
-              <TableCell>{req.idNumber}</TableCell>
-              <TableCell>{req.createdAt.toLocaleDateString('en-GB')}</TableCell>
-              <TableCell>{req.payee}</TableCell>
-              <TableCell>{req.title}</TableCell>
-              <TableCell>
-                {req.amount.toLocaleString(undefined, {
-                  minimumFractionDigits: 2,
-                })}
-              </TableCell>
-              <TableCell>{req.currency}</TableCell>
-              {requestType === 'Received' ? (
-                <>
-                  <TableCell>{req.requester?.name ?? ''}</TableCell>
-                </>
-              ) : (
-                <>
-                  <TableCell>{req.internalRef}</TableCell>
-                  <TableCell>{req.externalRef}</TableCell>
-                </>
-              )}
-              <TableCell>
-                <Box display="flex" gap={1}>
-                  <ActionButton
-                    buttonType="Preview"
-                    onClick={() => openPreview(req.approvalFile?.id ?? '')}
-                  />
-                </Box>
-              </TableCell>
-            </TableRow>
-          ))}
+                  '&.MuiTableRow-root:hover': {
+                    backgroundColor: (() =>
+                      getRowBackgroundColor(req.status))(),
+                  },
+                }}
+                onClick={() => router.push(`${baseRoute}/${req.id}`)}
+              >
+                <TableCell>{req.idNumber}</TableCell>
+                <TableCell>
+                  {req.createdAt.toLocaleDateString('en-GB')}
+                </TableCell>
+                <TableCell>{req.payee}</TableCell>
+                <TableCell>{req.title}</TableCell>
+                <TableCell>
+                  {req.amount.toLocaleString(undefined, {
+                    minimumFractionDigits: 2,
+                  })}
+                </TableCell>
+                <TableCell>{req.currency}</TableCell>
+                {requestType === 'Received' ? (
+                  <>
+                    <TableCell>{req.requester?.name ?? ''}</TableCell>
+                  </>
+                ) : (
+                  <>
+                    <TableCell>{req.internalRef}</TableCell>
+                    <TableCell>{req.externalRef}</TableCell>
+                  </>
+                )}
+                <TableCell>
+                  <Box display="flex" gap={1}>
+                    <ActionButton
+                      buttonType="Preview"
+                      onClick={() => openPreview(req.approvalFile?.id ?? '')}
+                    />
+                  </Box>
+                </TableCell>
+              </TableRow>
+            ))
+          ) : (
+            <TableCell colSpan={10} align="center">
+              <Typography>No Records Found</Typography>
+            </TableCell>
+          )}
         </TableBody>
       </Table>
     </Box>

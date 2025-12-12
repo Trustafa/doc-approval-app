@@ -6,7 +6,7 @@ import { RequestType } from '@/app/_types/request';
 import { openPreview } from '@/app/api/_client/file.client';
 import { useRequests } from '@/hooks/RequestsContext';
 import { Add } from '@mui/icons-material';
-import { Box, IconButton, Pagination, Stack } from '@mui/material';
+import { Box, IconButton, Pagination, Stack, Typography } from '@mui/material';
 import { useRouter } from 'next/navigation';
 
 type RequestsScreenProps = {
@@ -50,23 +50,32 @@ export default function MobileRequestsView({
         requestType={requestType}
         defaultFilters={filters}
       />
-      {data.map((item) => (
-        <RequestEntry
-          key={item.id}
-          data={item}
-          sx={{ mb: 2 }}
-          onClick={() => router.push(`${baseRoute}/${item.id}`)}
-          openPreview={openPreview}
-        />
-      ))}
-      <Stack spacing={2} alignItems="center" mt={2}>
-        <Pagination
-          count={Math.ceil(total / pageSize)}
-          page={page + 1}
-          onChange={(_, value) => setPage(value - 1)}
-          color="primary"
-        />
-      </Stack>
+      {data.length > 0 ? (
+        <>
+          {data.map((item) => (
+            <RequestEntry
+              key={item.id}
+              data={item}
+              sx={{ mb: 0 }}
+              onClick={() => router.push(`${baseRoute}/${item.id}`)}
+              openPreview={openPreview}
+            />
+          ))}
+          <Stack spacing={2} alignItems="center" mt={2}>
+            <Pagination
+              count={Math.ceil(total / pageSize)}
+              page={page + 1}
+              onChange={(_, value) => setPage(value - 1)}
+              color="primary"
+            />
+          </Stack>
+        </>
+      ) : (
+        <Typography sx={{ display: 'flex', justifyContent: 'center', mt: 10 }}>
+          No Records Found
+        </Typography>
+      )}
+
       <Box sx={{ position: 'fixed', bottom: 10, left: 10 }}>
         {requestType === 'Sent' && new_request_button}
       </Box>

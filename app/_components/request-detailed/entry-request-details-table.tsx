@@ -112,7 +112,7 @@ export default function ApprovalDetailsTable({ data }: ApprovalTableProps) {
                   onClick={() => openSignedApprovalFile(data.id)}
                   variant="hyperlink"
                 >
-                  {isApproved ? 'Signed Document' : ''}
+                  {isApproved ? 'Signed Document' : 'No Signed Document'}
                 </Button>
                 {isApproved && (
                   <IconButton
@@ -132,28 +132,32 @@ export default function ApprovalDetailsTable({ data }: ApprovalTableProps) {
           <ApprovalTableRow
             header="Supporting Documents"
             data={
-              data.supportingFiles?.length
-                ? data.supportingFiles?.map((file) => {
-                    return (
-                      <Box sx={{ display: 'flex' }} key={file.id}>
-                        <Button
-                          onClick={() => openPreview(file.id)}
-                          variant="hyperlink"
-                        >
-                          {file.filename}
-                        </Button>
+              data.supportingFiles?.length ? (
+                data.supportingFiles?.map((file) => {
+                  return (
+                    <Box sx={{ display: 'flex' }} key={file.id}>
+                      <Button
+                        onClick={() => openPreview(file.id)}
+                        variant="hyperlink"
+                      >
+                        {file.filename}
+                      </Button>
 
-                        <IconButton
-                          onClick={() => downloadFile(file.id)}
-                          sx={{ ml: 2 }}
-                          size="medium"
-                        >
-                          <FileDownloadOutlined />
-                        </IconButton>
-                      </Box>
-                    );
-                  })
-                : '-'
+                      <IconButton
+                        onClick={() => downloadFile(file.id)}
+                        sx={{ ml: 2 }}
+                        size="medium"
+                      >
+                        <FileDownloadOutlined />
+                      </IconButton>
+                    </Box>
+                  );
+                })
+              ) : (
+                <Button disabled variant="hyperlink">
+                  {'No Supporting Documents'}
+                </Button>
+              )
             }
           />
         </TableBody>

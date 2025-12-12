@@ -165,9 +165,11 @@ export default function RequestsTable({
               </TableRow>
             ))
           ) : (
-            <TableCell colSpan={10} align="center">
-              <Typography>No Records Found</Typography>
-            </TableCell>
+            <TableRow>
+              <TableCell colSpan={10} align="center">
+                <Typography>No Records Found</Typography>
+              </TableCell>
+            </TableRow>
           )}
         </TableBody>
       </Table>

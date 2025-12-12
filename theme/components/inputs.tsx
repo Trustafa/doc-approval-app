@@ -143,7 +143,7 @@ export const inputsCustomizations: Components<Theme> = {
               minWidth: 0,
               textTransform: 'none',
               fontSize: 'inherit',
-              color: 'primary.main',
+              color: 'blue',
               '&:hover': {
                 textDecoration: 'underline',
                 backgroundColor: 'transparent',

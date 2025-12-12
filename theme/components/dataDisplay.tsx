@@ -229,4 +229,23 @@ export const dataDisplayCustomizations: Components<Theme> = {
       }),
     },
   },
+  MuiTabs: {
+    styleOverrides: {
+      indicator: {
+        backgroundColor: gray[600],
+        height: 3,
+      },
+    },
+  },
+  MuiTab: {
+    styleOverrides: {
+      root: {
+        color: gray[600],
+        '&.Mui-selected': {
+          color: gray[600],
+          fontWeight: 500,
+        },
+      },
+    },
+  },
 };

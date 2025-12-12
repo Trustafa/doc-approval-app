@@ -37,6 +37,12 @@ export async function GET(req: NextRequest) {
 
   const skip = (Number(pageQuery) - 1) * Number(pageSizeQuery);
 
+  function endOfDay(dateStr: string) {
+    const date = new Date(dateStr);
+    date.setHours(23, 59, 59, 999);
+    return date;
+  }
+
   const where = {
     requesterId: user.id,
     approvals: statusIsValid ? { some: { decision: statusQuery } } : undefined,
@@ -60,7 +66,7 @@ export async function GET(req: NextRequest) {
       ? {
           createdAt: {
             ...(fromDate && { gte: new Date(fromDate) }),
-            ...(toDate && { lte: new Date(toDate) }),
+            ...(toDate && { lte: endOfDay(toDate) }),
           },
         }
       : {}),

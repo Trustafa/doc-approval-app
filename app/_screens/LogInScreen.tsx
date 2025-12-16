@@ -17,6 +17,7 @@ import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import AppTheme from '../../shared-theme/AppTheme';
+import ControlledCheckbox from '../_components/controlled/controlled-checkbox';
 import ControlledStyledTextField from '../_components/controlled/controlled-styled-text-field';
 import LoadingBox from '../_components/loading-box';
 import { logIn } from '../api/_client/auth.client';
@@ -25,6 +26,7 @@ import { getMe } from '../api/_client/user.client';
 type LogInProps = {
   email: string;
   password: string;
+  remember: boolean;
 };
 
 const Card = styled(MuiCard)(({ theme }) => ({
@@ -77,11 +79,16 @@ export default function LogInScreen(props: { disableCustomTheme?: boolean }) {
     defaultValues: {
       email: '',
       password: '',
+      remember: false,
     },
   });
 
   const onSubmit = async (data: LogInProps) => {
-    const result = await logIn(data.email, data.password);
+    const result = await logIn({
+      email: data.email,
+      password: data.password,
+      longLife: data.remember,
+    });
 
     if (!result.success) {
       setValue('password', '');
@@ -152,9 +159,13 @@ export default function LogInScreen(props: { disableCustomTheme?: boolean }) {
                 rules={{
                   required: 'Email is required',
                   validate: {
-                    checkEmail: (v) =>
-                      /\S+@\S+\.\S+/.test(v) ||
-                      'Please enter a valid email address.',
+                    checkEmail: (v) => {
+                      if (typeof v !== 'string') return 'Invalid value';
+                      return (
+                        /\S+@\S+\.\S+/.test(v) ||
+                        'Please enter a valid email address.'
+                      );
+                    },
                   },
                 }}
               />
@@ -173,6 +184,11 @@ export default function LogInScreen(props: { disableCustomTheme?: boolean }) {
                 rules={{ required: 'Password is required' }}
               />
             </FormControl>
+            <ControlledCheckbox<LogInProps>
+              name="remember"
+              control={control}
+              label="Remember me"
+            />
             <Button type="submit" fullWidth variant="contained">
               Log in
             </Button>

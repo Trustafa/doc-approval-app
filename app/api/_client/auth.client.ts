@@ -2,14 +2,15 @@ import { apiFetch } from './apiFetch';
 
 export type AuthResult = { success: true } | { success: false; status: number };
 
-export async function logIn(
-  email: string,
-  password: string
-): Promise<AuthResult> {
+export async function logIn(data: {
+  email: string;
+  password: string;
+  longLife: boolean;
+}): Promise<AuthResult> {
   const res = await fetch('/api/auth/login', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ email, password }),
+    body: JSON.stringify(data),
   });
 
   if (!res.ok) {

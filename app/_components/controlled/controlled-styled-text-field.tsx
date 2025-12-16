@@ -1,7 +1,9 @@
 'use client';
 
 import { ControlledFieldProps } from '@/utils/form-control-props.type';
-import { Box, Typography } from '@mui/material';
+import { Visibility, VisibilityOff } from '@mui/icons-material';
+import { Box, IconButton, InputAdornment, Typography } from '@mui/material';
+import { useState } from 'react';
 import { FieldValues, useController } from 'react-hook-form';
 import StyledTextField from '../styled/styled-text-field';
 
@@ -19,28 +21,42 @@ const ControlledStyledTextField = <T extends FieldValues>({
     field,
     fieldState: { error },
   } = useController({ name, control, rules });
+
+  const [showPassword, setShowPassword] = useState(false);
+
+  const isPassword = type === 'password';
+
   return (
     <Box sx={{ display: 'flex', flexDirection: 'column', mb: 2, flex: 1 }}>
-      <Typography variant="caption" sx={{ mb: 0.5, color: 'text.secondary' }}>
-        {label}
-      </Typography>
+      {label && (
+        <Typography variant="caption" sx={{ mb: 0.5, color: 'text.secondary' }}>
+          {label}
+        </Typography>
+      )}
+
       <StyledTextField
         {...field}
-        type={type}
+        type={isPassword && showPassword ? 'text' : type}
         rows={rows}
         multiline={multiline}
         placeholder={placeholder}
         error={!!error}
         helperText={error?.message}
+        InputProps={{
+          endAdornment: isPassword && (
+            <InputAdornment position="end">
+              <IconButton
+                onClick={() => setShowPassword((prev) => !prev)}
+                edge="end"
+                tabIndex={-1}
+              >
+                {showPassword ? <VisibilityOff /> : <Visibility />}
+              </IconButton>
+            </InputAdornment>
+          ),
+        }}
         onChange={(e) => {
-          if (type === 'number') {
-            const val = e.target.value;
-            if (val === '' || /^\d*\.?\d{0,2}$/.test(val)) {
-              field.onChange(val === '' ? '' : parseFloat(val));
-            }
-          } else {
-            field.onChange(e.target.value);
-          }
+          field.onChange(e.target.value);
         }}
       />
     </Box>

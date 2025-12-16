@@ -16,6 +16,7 @@ const ControlledStyledTextField = <T extends FieldValues>({
   placeholder,
   rows,
   multiline = false,
+  disabled = false,
 }: ControlledFieldProps<T>) => {
   const {
     field,
@@ -42,18 +43,22 @@ const ControlledStyledTextField = <T extends FieldValues>({
         placeholder={placeholder}
         error={!!error}
         helperText={error?.message}
-        InputProps={{
-          endAdornment: isPassword && (
-            <InputAdornment position="end">
-              <IconButton
-                onClick={() => setShowPassword((prev) => !prev)}
-                edge="end"
-                tabIndex={-1}
-              >
-                {showPassword ? <VisibilityOff /> : <Visibility />}
-              </IconButton>
-            </InputAdornment>
-          ),
+        disabled={disabled}
+        slotProps={{
+          input: {
+            endAdornment: isPassword && (
+              <InputAdornment position="end">
+                <IconButton
+                  onClick={() => setShowPassword((prev) => !prev)}
+                  edge="end"
+                  tabIndex={-1}
+                  variant="icon"
+                >
+                  {showPassword ? <VisibilityOff /> : <Visibility />}
+                </IconButton>
+              </InputAdornment>
+            ),
+          },
         }}
         onChange={(e) => {
           field.onChange(e.target.value);
